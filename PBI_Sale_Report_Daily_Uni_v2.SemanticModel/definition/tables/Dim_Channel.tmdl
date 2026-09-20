@@ -1,0 +1,55 @@
+table Dim_Channel
+	lineageTag: 92f1e434-002e-41ec-8f22-b943c78641d3
+
+	column Channel
+		dataType: string
+		lineageTag: 003adf3f-f6b7-4bb1-8a02-00c0c7964484
+		summarizeBy: none
+		sourceColumn: Channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column Kênh
+		dataType: string
+		lineageTag: d7ff38b4-58a2-4cca-96a8-218821c4cdfe
+		summarizeBy: none
+		sourceColumn: Kênh
+
+		annotation SummarizationSetBy = Automatic
+
+	column Master_Channel
+		dataType: string
+		lineageTag: 76829cd4-6158-43ce-9ccf-4ca2360f57bf
+		summarizeBy: none
+		sourceColumn: Master_Channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sub_channel_detail
+		dataType: string
+		lineageTag: 79f5f343-af1a-4082-93f6-4631e2a0f22b
+		summarizeBy: none
+		sourceColumn: Sub_channel_detail
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Channel = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows1" = Table.SelectRows(Source, each ([Name] = "Unicorn_Dim_Channel.xlsx")),
+				    #"Filtered Hidden Files2" = Table.SelectRows(#"Filtered Rows1", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function2" = Table.AddColumn(#"Filtered Hidden Files2", "Transform File (20)", each #"Transform File (20)"([Content])),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Invoke Custom Function2", {"Name", "Source.Name"}),
+				    #"Removed Other Columns2" = Table.SelectColumns(#"Renamed Columns2", {"Source.Name", "Transform File (20)"}),
+				    #"Expanded Table Column2" = Table.ExpandTableColumn(#"Removed Other Columns2", "Transform File (20)", Table.ColumnNames(#"Transform File (20)"(#"Sample File (20)"))),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Expanded Table Column2",{{"Source.Name", type text}, {"Kênh", type text}, {"Master_Channel", type text}, {"Channel", type text}, {"Sub_channel_detail", type text}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type1",{"Kênh", "Master_Channel", "Channel", "Sub_channel_detail"})
+				in
+				    #"Removed Other Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

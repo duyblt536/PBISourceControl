@@ -1,0 +1,65 @@
+table Key_SKU_Online_VY
+	lineageTag: 11b9cb89-0e32-465d-a91e-82aae4ec3c43
+
+	column 'NHÓM HÀNG CON'
+		dataType: string
+		lineageTag: 5fff3a79-6b29-424e-83d7-afee031a3d40
+		summarizeBy: none
+		sourceColumn: NHÓM HÀNG CON
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mã hàng'
+		dataType: string
+		lineageTag: 471a6730-75ac-4833-abd8-cedda5ac7ff2
+		summarizeBy: none
+		sourceColumn: Mã hàng
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tên hàng'
+		dataType: string
+		lineageTag: 6fd93f8e-4981-4387-bddd-7bc176ee2944
+		summarizeBy: none
+		sourceColumn: Tên hàng
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Thương hiệu'
+		dataType: string
+		lineageTag: a79ae30f-6d32-4e26-a059-c08be74a222a
+		summarizeBy: none
+		sourceColumn: Thương hiệu
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 329aa3b1-3778-4e5c-9055-2e580f87d8b0
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Key_SKU_Online_VY = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Name] = "TGSF_Key_SKU_Online_202406.xlsx")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (19)", each #"Transform File (19)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (19)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (19)", Table.ColumnNames(#"Transform File (19)"(#"Sample File (19)"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"NHÓM HÀNG CON", type text}, {"Mã hàng", type text}, {"Tên hàng", type text}, {"Thương hiệu", type text}, {"Month", type date}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"NHÓM HÀNG CON", "Mã hàng", "Tên hàng", "Thương hiệu", "Month"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns", {"Mã hàng"})
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_ResultType = Table
+

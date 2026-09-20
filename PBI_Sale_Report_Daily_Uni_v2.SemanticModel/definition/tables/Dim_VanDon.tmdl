@@ -1,0 +1,43 @@
+table Dim_VanDon
+	lineageTag: 9d2a78f0-8de9-4f73-91c8-577d17a1b3b1
+
+	column Province
+		dataType: string
+		lineageTag: eb03307f-cf28-4964-897e-49b003fcceb4
+		summarizeBy: none
+		sourceColumn: Province
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order ID'
+		dataType: string
+		lineageTag: 7f8bfa61-177e-4358-9b37-2eeca28f7a12
+		summarizeBy: none
+		sourceColumn: Order ID
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_VanDon = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows1" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Unicorn_Data_KiotViet/Unicorn_Data_KiotViet_VanDon/")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows1", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (11)", each #"Transform File (11)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (11)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (11)", Table.ColumnNames(#"Transform File (11)"(#"Sample File (11)"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"Mã vận đơn", type text}, {"Thời gian tạo", type text}, {"Thời gian hoàn thành", type any}, {"Mã hóa đơn", type text}, {"Khách hàng", type text}, {"Điện thoại", Int64.Type}, {"Địa chỉ", type text}, {"Khu vực", type text}, {"Trạng thái giao", type text}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"Mã hóa đơn", "Khu vực"}),
+				    #"Split Column by Delimiter" = Table.SplitColumn(#"Removed Other Columns", "Khu vực", Splitter.SplitTextByDelimiter("-", QuoteStyle.Csv), {"Khu vực.1", "Khu vực.2", "Khu vực.3"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"Khu vực.1", type text}, {"Khu vực.2", type text}, {"Khu vực.3", type text}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type1","TP. Hồ Chí Minh","Hồ Chí Minh",Replacer.ReplaceText,{"Khu vực.1"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","Bà Rịa","Bà Rịa Vũng Tàu",Replacer.ReplaceText,{"Khu vực.1"}),
+				    #"Removed Other Columns2" = Table.SelectColumns(#"Replaced Value1",{"Khu vực.1", "Mã hóa đơn"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns2",{{"Khu vực.1", "Province"}, {"Mã hóa đơn", "Order ID"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

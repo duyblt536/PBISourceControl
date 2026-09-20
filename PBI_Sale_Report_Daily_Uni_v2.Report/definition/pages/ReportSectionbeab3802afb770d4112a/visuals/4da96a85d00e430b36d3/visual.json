@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "4da96a85d00e430b36d3",
+  "position": {
+    "x": 858,
+    "y": 183,
+    "z": 20000,
+    "height": 260.71293375394322,
+    "width": 410.06231285818154,
+    "tabOrder": 10000
+  },
+  "visualGroup": {
+    "displayName": "Sale CAT LV3",
+    "groupMode": "ScaleMode"
+  }
+}

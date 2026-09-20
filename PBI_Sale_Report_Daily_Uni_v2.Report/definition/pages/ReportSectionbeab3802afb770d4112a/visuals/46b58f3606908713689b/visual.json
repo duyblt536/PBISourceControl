@@ -1,0 +1,17 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "46b58f3606908713689b",
+  "position": {
+    "x": 212,
+    "y": 12,
+    "z": 8000,
+    "height": 70,
+    "width": 691,
+    "tabOrder": 12000
+  },
+  "visualGroup": {
+    "displayName": "KPI Card Month",
+    "groupMode": "ScaleMode"
+  },
+  "isHidden": true
+}

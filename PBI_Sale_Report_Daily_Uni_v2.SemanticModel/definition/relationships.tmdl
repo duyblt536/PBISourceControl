@@ -1,0 +1,80 @@
+relationship AutoDetected_f45ffe67-9371-4421-969a-cce650781e81
+	fromColumn: Fact_Product_Sale.'Order ID'
+	toColumn: Dim_HoaDon.'Order ID'
+
+relationship AutoDetected_95c17a1d-ea45-4154-8c22-f2b357a19c3d
+	fromColumn: Fact_Product_Sale.'Item Code'
+	toColumn: Dim_Product.'Item Code'
+
+relationship 60780c12-9265-49f5-81c1-e28773ea2ac6
+	fromColumn: Dim_Product.'Category All'
+	toColumn: Dim_Category.'Category All'
+
+relationship d29e263b-2b59-40fa-b744-810ff5ae3efa
+	fromColumn: Fact_Product_Sale.'Order Date'
+	toColumn: Dim_Date.Date
+
+relationship AutoDetected_a9d14a68-b3b6-41a0-ae45-7d0d18bb7e68
+	fromColumn: Fact_Stock_Data.'Mã hàng'
+	toColumn: Dim_Product.'Item Code'
+
+relationship AutoDetected_5b6b7fb7-fb8f-406d-8b1e-d85541cb992b
+	fromColumn: Dim_Warehouse.Master_Channel
+	toColumn: Dim_Master_Channel.Master_Channel
+
+relationship 2771ab0a-36aa-4e8c-8e81-01be3443af44
+	fromColumn: Fact_Stock_Data.'Chi nhánh'
+	toColumn: Dim_Warehouse.Kho
+
+relationship AutoDetected_4abae6ba-230e-45d6-bfa4-a94333803ba5
+	crossFilteringBehavior: bothDirections
+	fromColumn: Dim_Category_Support.'Category All'
+	toColumn: Dim_Category.'Category All'
+
+relationship c9ab5ff2-d191-4147-9819-6784e90cb159
+	fromColumn: Fact_Stock_Data.'End of Month'
+	toColumn: Dim_Date.Date
+
+relationship 21e49aef-1b23-4287-943f-648f35e4525d
+	fromColumn: Fact_Product_Sale.'Item Code'
+	toColumn: Dim_Han_Key_SKU.'Mã hàng'
+
+relationship 23a96366-58fe-4f4f-a709-f733ba9e1f27
+	fromColumn: Fact_Stock_Data.'Mã hàng'
+	toColumn: Dim_Han_Key_SKU.'Mã hàng'
+
+relationship AutoDetected_6386ec48-5742-4063-878b-1ef14ee86660
+	fromColumn: Dim_Location.Region
+	toColumn: Dim_location_Mien_No.Region
+
+relationship 8b784684-a0d1-4028-a374-1e949f4e5ee0
+	fromColumn: Dim_HoaDon.'Order ID'
+	toColumn: Dim_VanDon.'Order ID'
+
+relationship 23afcf37-6862-46d3-b8c3-0acbdad32064
+	fromColumn: Dim_HoaDon.Province
+	toColumn: Dim_Location.Province
+
+relationship 2e46b2f8-7ad0-d42d-5a2e-afab3cab5e83
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: Fact_Product_Sale.'Item Code'
+	toColumn: Key_SKU_Online_VY.'Mã hàng'
+
+relationship 3b876f8b-2258-fd3e-400a-8a1307bdc359
+	isActive: false
+	fromColumn: Key_SKU_Online_VY.'Mã hàng'
+	toColumn: Dim_Product.'Item Code'
+
+relationship a020cdfb-a927-7c47-db5e-e904a96ec604
+	fromColumn: Dim_Product.Brand
+	toColumn: Dim_Brand.Brand
+
+relationship fcde873f-fe55-370e-b82e-e035d837a0c2
+	fromColumn: Dim_Channel.Master_Channel
+	toColumn: Dim_Master_Channel.Master_Channel
+
+relationship c99a62ad-2264-f3db-bc28-fe1ca9838c07
+	fromColumn: Dim_HoaDon.'Kênh bán'
+	toColumn: Dim_Channel.Kênh
+

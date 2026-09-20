@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "5f098ddd49d82088014c",
+  "position": {
+    "x": 435,
+    "y": 454,
+    "z": 22000,
+    "height": 260.2492113564669,
+    "width": 410.61835617101593,
+    "tabOrder": 13000
+  },
+  "visualGroup": {
+    "displayName": "Qty CAT LV2",
+    "groupMode": "ScaleMode"
+  }
+}

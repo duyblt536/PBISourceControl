@@ -1,0 +1,207 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup 'Transform File Group\Transform File from KiotViet_Order_Data'
+
+	annotation PBI_QueryGroupOrder = 1
+
+queryGroup 'Transform File Group\Transform File from KiotViet_Order_Data\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from KiotViet_HoaDon_Data'
+
+	annotation PBI_QueryGroupOrder = 2
+
+queryGroup 'Transform File Group\Transform File from KiotViet_HoaDon_Data\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from KiotViet_TraHang_Data'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from KiotViet_TraHang_Data\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from Dim_Product'
+
+	annotation PBI_QueryGroupOrder = 3
+
+queryGroup 'Transform File Group\Transform File from Dim_Product\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+/// File source dùng để append ra file Fact_HoaDon
+queryGroup 'append & Merge file'
+
+	annotation PBI_QueryGroupOrder = 1
+
+queryGroup 'Transform File Group\Transform File from KiotViet_Stock_Data'
+
+	annotation PBI_QueryGroupOrder = 4
+
+queryGroup 'Transform File Group\Transform File from Dim_Date'
+
+	annotation PBI_QueryGroupOrder = 5
+
+queryGroup 'Transform File Group\Transform File from Dim_Channel'
+
+	annotation PBI_QueryGroupOrder = 6
+
+queryGroup 'Transform File Group\Transform File from Dim_Warehouse'
+
+	annotation PBI_QueryGroupOrder = 7
+
+queryGroup 'Transform File Group\Transform File from Dim_Master_Channel'
+
+	annotation PBI_QueryGroupOrder = 8
+
+queryGroup 'Transform File Group\Transform File from Dim_Han_Key_SKU'
+
+	annotation PBI_QueryGroupOrder = 9
+
+queryGroup 'Transform File Group\Transform File from KiotViet_Stock_Data\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from Dim_Date\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from Dim_Channel\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from Dim_Warehouse\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from Dim_Master_Channel\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from Dim_Han_Key_SKU\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from VanDon'
+
+	annotation PBI_QueryGroupOrder = 11
+
+queryGroup 'Transform File Group\Transform File from VanDon\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from Dim_Location'
+
+	annotation PBI_QueryGroupOrder = 10
+
+queryGroup 'Transform File Group\Transform File from Dim_Location\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from Dim_Location_Mien_No'
+
+	annotation PBI_QueryGroupOrder = 12
+
+queryGroup 'Transform File Group\Transform File from Dim_Location_Mien_No\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from Query1'
+
+	annotation PBI_QueryGroupOrder = 16
+
+queryGroup 'Transform File Group\Transform File from Key_SKU_Online'
+
+	annotation PBI_QueryGroupOrder = 13
+
+queryGroup 'Transform File Group\Transform File from Query1\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from Key_SKU_Online\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'append & Merge file\Transform File from 0_Append_KiotViet_HoaDon_Data'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'append & Merge file\Transform File from 0_Append_KiotViet_HoaDon_Data\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File Group\Transform File from Dim_Price_Range'
+
+	annotation PBI_QueryGroupOrder = 14
+
+queryGroup 'Transform File Group\Transform File from Dim_Price_Range\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File from Unicorn_Dim_Channel (2)'
+
+	annotation PBI_QueryGroupOrder = 36
+
+queryGroup 'Transform File from Unicorn_Dim_Channel (2)\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File from Key_SKU_Online_VY'
+
+	annotation PBI_QueryGroupOrder = 38
+
+queryGroup 'Transform File from Key_SKU_Online_VY\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File from Dim_Channel (2)'
+
+	annotation PBI_QueryGroupOrder = 40
+
+queryGroup 'Transform File from Dim_Channel (2)\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["0_Append_Fact_KiotViet_TraHang_Data","0_Append_KiotViet_HoaDon_Data","Dim_Han_Key_SKU","Fact_Product_Sale","Fact_Stock_Data","Parameter1","Transform Sample File","Sample File","Transform File","Parameter2","Transform Sample File (2)","Sample File (2)","Transform File (2)","Parameter3","Transform Sample File (3)","Sample File (3)","Transform File (3)","Dim_HoaDon","Dim_Product","Parameter4","Transform Sample File (4)","Sample File (4)","Transform File (4)","Dim_Category","Dim_Date","Dim_Channel","Parameter5","Transform Sample File (5)","Sample File (5)","Transform File (5)","Dim_Warehouse","Dim_Master_Channel","Dim_Category_Support","Dim_Location","Parameter6","Transform Sample File (6)","Sample File (6)","Transform File (6)","Parameter7","Transform Sample File (7)","Sample File (7)","Transform File (7)","Parameter8","Transform Sample File (8)","Sample File (8)","Transform File (8)","Parameter9","Transform Sample File (9)","Sample File (9)","Transform File (9)","Parameter10","Transform Sample File (10)","Sample File (10)","Transform File (10)","Dim_VanDon","Parameter11","Transform Sample File (11)","Sample File (11)","Transform File (11)","Parameter12","Transform Sample File (12)","Sample File (12)","Transform File (12)","Dim_location_Mien_No","Key_SKU_Online_VY","Parameter13","Transform Sample File (13)","Sample File (13)","Transform File (13)","Parameter14","Transform Sample File (14)","Sample File (14)","Transform File (14)","Parameter15","Transform Sample File (15)","Sample File (15)","Transform File (15)","Parameter16","Transform Sample File (16)","Sample File (16)","Transform File (16)","Dim_Price_Range","Parameter18","Transform Sample File (18)","Sample File (18)","Transform File (18)","Parameter17","Transform Sample File (17)","Sample File (17)","Transform File (17)","Dim_Brand","Parameter19","Transform Sample File (19)","Sample File (19)","Transform File (19)","Parameter20","Transform Sample File (20)","Sample File (20)","Transform File (20)"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Fact_Product_Sale
+ref table Dim_HoaDon
+ref table Dim_Product
+ref table Dim_Category
+ref table Dim_Date
+ref table Dim_Channel
+ref table Fact_Stock_Data
+ref table Dim_Warehouse
+ref table Dim_Master_Channel
+ref table Dim_Category_Support
+ref table Dim_Han_Key_SKU
+ref table Dim_VanDon
+ref table Dim_Location
+ref table Dim_location_Mien_No
+ref table Key_SKU_Online_VY
+ref table Dim_Price_Range
+ref table Dim_Brand
+
+ref role 'Brand Romand'
+ref role All
+
+ref cultureInfo en-US
+

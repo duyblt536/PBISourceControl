@@ -1,0 +1,41 @@
+table Dim_Warehouse
+	lineageTag: 01ef9de5-c518-401a-93c5-17888948b19c
+
+	column Kho
+		dataType: string
+		lineageTag: 42074a1b-3531-49ad-bf7d-8ee4237e7ae9
+		summarizeBy: none
+		sourceColumn: Kho
+
+		annotation SummarizationSetBy = Automatic
+
+	column Master_Channel
+		dataType: string
+		isHidden
+		lineageTag: bf581247-1269-4a7f-84f8-c392aeb2bb60
+		summarizeBy: none
+		sourceColumn: Master_Channel
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Warehouse = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/TGSF_Dim_Product/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/Unicorn_Dim_Product/") and ([Name] = "Dim_Warehouse.xlsx")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (8)", each #"Transform File (8)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Transform File (8)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (8)", Table.ColumnNames(#"Transform File (8)"(#"Sample File (8)"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Kho", type text}, {"Master_Channel", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

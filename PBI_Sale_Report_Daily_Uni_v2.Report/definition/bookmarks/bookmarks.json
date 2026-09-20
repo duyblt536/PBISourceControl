@@ -1,0 +1,95 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json",
+  "items": [
+    {
+      "name": "Bookmark84bb245990064ca445b2",
+      "displayName": "Sale Overview Shape",
+      "children": [
+        "Bookmarkb4eeed31794ca679fd49",
+        "Bookmark4c1646554002ddf9a8b9",
+        "Bookmark67f3a4debad23f8088b4"
+      ]
+    },
+    {
+      "name": "Bookmark4b586daec89b08a485e8",
+      "displayName": "Sales Category",
+      "children": [
+        "Bookmarkda8863b7e471be613e2b",
+        "Bookmark4581175ea8b2b007b87b",
+        "Bookmarkd27759c700675d30a2b8"
+      ]
+    },
+    {
+      "name": "Bookmark1fd9be0dc25b5a650da8",
+      "displayName": "Comparison Sales Shape",
+      "children": [
+        "Bookmark0a8b4639ce50fcdefc93",
+        "Bookmark0ca1b97f044eb64aa393",
+        "Bookmark84c255dee299b0bbbf60"
+      ]
+    },
+    {
+      "name": "Bookmark55698397bc4cc2b98465",
+      "displayName": "Item Sales Shape",
+      "children": [
+        "Bookmark86595ab600057cef752e",
+        "Bookmark715dba5b17bf7b6ff4fa",
+        "Bookmark00ddbb4271758b245b21"
+      ]
+    },
+    {
+      "name": "Bookmarkae7434f3e81b3e71eeca",
+      "displayName": "Brand Sales",
+      "children": [
+        "Bookmark4d89c160c13027090950",
+        "Bookmarkf10e5e7db7064047383b",
+        "Bookmark8ae42de12eb24a1cd510"
+      ]
+    },
+    {
+      "name": "7db178b2e53ffb5ebd98",
+      "displayName": "AOV Shape",
+      "children": [
+        "a21705d44ee9c000e41f",
+        "4df2cdf37ac06da12dbb"
+      ]
+    },
+    {
+      "name": "Bookmarkfff7cbee992e63afc04b",
+      "displayName": "Remove Filter",
+      "children": [
+        "Bookmark365b09129381e19f6298",
+        "Bookmark0f79139dfe94bcaee34b",
+        "Bookmark84b629d230cc2bb7dff5",
+        "Bookmark2a6b93de4fa66bc8ac7e",
+        "Bookmark50919328c170d75840a5",
+        "Bookmarkb838ca9bd982d700039c",
+        "Bookmarka16edabd66a181149c94",
+        "Bookmark75e78c25989b10533002",
+        "5c836a233d1cef062f14",
+        "a43909e00b75b9d8e94a"
+      ]
+    },
+    {
+      "name": "Bookmarkbfa605a9075008982941"
+    },
+    {
+      "name": "Bookmark6d7b6332883e90620769"
+    },
+    {
+      "name": "Bookmarkc69b59fae9412de320dc"
+    },
+    {
+      "name": "Bookmark40e416107aa877e735e8"
+    },
+    {
+      "name": "b823803d0894a8085092",
+      "displayName": "Order Overview",
+      "children": [
+        "6276df9b8a58a752400b",
+        "388027f608085d7ba798",
+        "88bdc690c809729c3d6a"
+      ]
+    }
+  ]
+}

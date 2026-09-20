@@ -1,0 +1,82 @@
+table Dim_Product
+	lineageTag: a3ea6fea-c631-4370-b053-ea60a7fce9c0
+
+	column 'Loại hàng'
+		dataType: string
+		lineageTag: 97525e51-acba-428b-9fc7-eae5134902a9
+		summarizeBy: none
+		sourceColumn: Loại hàng
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Category All'
+		dataType: string
+		lineageTag: 5d01364f-6460-4375-a0ae-f2c8c5dba184
+		summarizeBy: none
+		sourceColumn: Category All
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Item Code'
+		dataType: string
+		lineageTag: 8a5da352-4ede-4aaa-a913-339282c72819
+		summarizeBy: none
+		sourceColumn: Item Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Item Name'
+		dataType: string
+		lineageTag: b6a20e8e-1420-4937-87f0-e0b1776e76fd
+		summarizeBy: none
+		sourceColumn: Item Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Brand
+		dataType: string
+		lineageTag: 832e4fea-0e97-4451-9dec-2e3d71d814d6
+		summarizeBy: none
+		sourceColumn: Brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Đang kinh doanh'
+		dataType: int64
+		formatString: 0
+		lineageTag: d601bace-1539-4373-8053-29b9902ffc54
+		summarizeBy: sum
+		sourceColumn: Đang kinh doanh
+
+		annotation SummarizationSetBy = Automatic
+
+	column Price
+		dataType: int64
+		formatString: 0
+		lineageTag: d739cdec-230a-4390-8049-535b084633c9
+		summarizeBy: sum
+		sourceColumn: Price
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Product = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/Unicorn_Dim_Product/")),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Rows", "Transform File (4)", each #"Transform File (4)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (4)"}),
+				    #"Expanded Transform File (4)" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (4)", {"Loại hàng", "Nhóm hàng(3 Cấp)", "Mã hàng", "Mã vạch", "Tên hàng", "Thương hiệu", "Giá bán", "Tồn kho", "Đặt NCC", "KH đặt", "Dự kiến hết hàng", "Tồn nhỏ nhất", "Tồn lớn nhất", "ĐVT", "Thuộc tính", "Mã HH Liên quan", "Hình ảnh (url1,url2...)", "Trọng lượng", "Tích điểm", "Điểm thưởng", "Đang kinh doanh", "Được bán trực tiếp", "Mô tả", "Mẫu ghi chú", "Vị trí", "Hàng thành phần"}, {"Loại hàng", "Nhóm hàng(3 Cấp)", "Mã hàng", "Mã vạch", "Tên hàng", "Thương hiệu", "Giá bán", "Tồn kho", "Đặt NCC", "KH đặt", "Dự kiến hết hàng", "Tồn nhỏ nhất", "Tồn lớn nhất", "ĐVT", "Thuộc tính", "Mã HH Liên quan", "Hình ảnh (url1,url2...)", "Trọng lượng", "Tích điểm", "Điểm thưởng", "Đang kinh doanh", "Được bán trực tiếp", "Mô tả", "Mẫu ghi chú", "Vị trí", "Hàng thành phần"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Transform File (4)",{{"Source.Name", type text}, {"Loại hàng", type text}, {"Nhóm hàng(3 Cấp)", type text}, {"Mã hàng", type text}, {"Mã vạch", type any}, {"Tên hàng", type text}, {"Thương hiệu", type text}, {"Giá bán", Int64.Type}, {"Tồn kho", Int64.Type}, {"Đặt NCC", Int64.Type}, {"KH đặt", Int64.Type}, {"Dự kiến hết hàng", type text}, {"Tồn nhỏ nhất", Int64.Type}, {"Tồn lớn nhất", Int64.Type}, {"ĐVT", type any}, {"Thuộc tính", type any}, {"Mã HH Liên quan", type any}, {"Hình ảnh (url1,url2...)", type any}, {"Trọng lượng", Int64.Type}, {"Tích điểm", Int64.Type}, {"Điểm thưởng", Int64.Type}, {"Đang kinh doanh", Int64.Type}, {"Được bán trực tiếp", Int64.Type}, {"Mô tả", type any}, {"Mẫu ghi chú", type any}, {"Vị trí", type any}, {"Hàng thành phần", type text}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"Loại hàng", "Nhóm hàng(3 Cấp)", "Mã hàng", "Tên hàng", "Thương hiệu", "Đang kinh doanh","Giá bán"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"Giá bán", "Price"}, {"Thương hiệu", "Brand"}, {"Tên hàng", "Item Name"}, {"Mã hàng", "Item Code"}, {"Nhóm hàng(3 Cấp)", "Category All"}}),
+				    #"Removed Duplicates" = Table.Distinct(#"Renamed Columns", {"Item Code"})
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_ResultType = Table
+

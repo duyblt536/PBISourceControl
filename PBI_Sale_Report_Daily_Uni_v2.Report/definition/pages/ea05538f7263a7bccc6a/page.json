@@ -1,0 +1,144 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "ea05538f7263a7bccc6a",
+  "displayName": "AOV",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "Filterd7d43bd1e43d6840350e",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Dim_Channel"
+              }
+            },
+            "Property": "Channel"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "d",
+              "Entity": "Dim_Channel",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Not": {
+                  "Expression": {
+                    "In": {
+                      "Expressions": [
+                        {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "d"
+                              }
+                            },
+                            "Property": "Channel"
+                          }
+                        }
+                      ],
+                      "Values": [
+                        [
+                          {
+                            "Literal": {
+                              "Value": "'Tiki'"
+                            }
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User",
+        "objects": {
+          "general": [
+            {
+              "properties": {
+                "isInvertedSelectionMode": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "true"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "ThemeDataColor": {
+                    "ColorId": 0,
+                    "Percent": -0.2
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "30D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "a0df8d71f8d2cb8fab18",
+      "target": "ee1a5aaa761d41980282",
+      "type": "NoFilter"
+    },
+    {
+      "source": "a0df8d71f8d2cb8fab18",
+      "target": "c269c26d0d14fdb6a12c",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c269c26d0d14fdb6a12c",
+      "target": "a0df8d71f8d2cb8fab18",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c269c26d0d14fdb6a12c",
+      "target": "4431981b556d7e9d8a04",
+      "type": "DataFilter"
+    },
+    {
+      "source": "ee1a5aaa761d41980282",
+      "target": "a0df8d71f8d2cb8fab18",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f899f947adfeed4d713d",
+      "target": "a0df8d71f8d2cb8fab18",
+      "type": "NoFilter"
+    }
+  ]
+}

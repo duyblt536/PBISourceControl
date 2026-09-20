@@ -1,0 +1,42 @@
+table Dim_location_Mien_No
+	lineageTag: 283d8230-473a-423a-b9d3-7ef9ab778667
+
+	column No
+		dataType: int64
+		formatString: 0
+		lineageTag: dedb84ae-41f1-40f0-8e5e-8ffdbaf3f56a
+		summarizeBy: none
+		sourceColumn: No
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: e032a321-4bfe-449e-8e64-8f9217328690
+		summarizeBy: none
+		sourceColumn: Region
+		sortByColumn: No
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_location_Mien_No = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Name] = "Dim_Location_Mien_Number.xlsx")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (13)", each #"Transform File (13)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (13)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (13)", Table.ColumnNames(#"Transform File (13)"(#"Sample File (13)"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"No", Int64.Type}, {"Miền", type text}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"No", "Miền"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"Miền", "Region"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

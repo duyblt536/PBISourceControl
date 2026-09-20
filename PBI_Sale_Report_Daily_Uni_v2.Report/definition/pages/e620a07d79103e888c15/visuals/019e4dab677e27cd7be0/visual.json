@@ -1,0 +1,17 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "019e4dab677e27cd7be0",
+  "position": {
+    "x": 206.7513611615245,
+    "y": 9.2921960072595287,
+    "z": 4000,
+    "height": 69.691470054446455,
+    "width": 691.10707803992739,
+    "tabOrder": 3000
+  },
+  "visualGroup": {
+    "displayName": "KPI Card Week",
+    "groupMode": "ScaleMode"
+  },
+  "isHidden": true
+}

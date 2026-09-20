@@ -1,0 +1,118 @@
+table Fact_Stock_Data
+	lineageTag: 22d3b2c1-7a8e-4fe6-a590-1979c2cf250f
+
+	measure 'Total Stock' = SUM(Fact_Stock_Data[Tồn cuối kì chi tiết])
+		lineageTag: eb9f2790-00db-44df-aa1d-75f259e902ee
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure DayStock = DIVIDE([Total Stock],[Total Qty])
+		formatString: 0.0
+		lineageTag: b03896d5-a1d9-43c4-9a41-68e525c158d2
+
+	measure 'Stock Ratio' = DIVIDE([Total Qty 90 days],[Total Stock])
+		lineageTag: 780aa849-d0bd-4690-a33b-3d97c052c62d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'DayStock LY' =
+			
+			CALCULATE([DayStock],SAMEPERIODLASTYEAR(Dim_Date[Date]))
+		lineageTag: 580b9799-bdfa-4045-8d6d-d9562ed18c27
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Stock LY' =
+			
+			CALCULATE([Total Stock],SAMEPERIODLASTYEAR(Dim_Date[Date]))
+		formatString: 0
+		lineageTag: 2f479695-4523-4a5d-9c68-c36cf492ca1d
+
+	column 'Mã hàng'
+		dataType: string
+		displayFolder: _Columns
+		lineageTag: f9c382c5-9051-4721-a169-02344a5b85c9
+		summarizeBy: none
+		sourceColumn: Mã hàng
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Chi nhánh'
+		dataType: string
+		isHidden
+		displayFolder: _Columns
+		lineageTag: 1c533277-4910-4d88-9bae-02ef9f98a1cb
+		summarizeBy: none
+		sourceColumn: Chi nhánh
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tồn cuối kì chi tiết'
+		dataType: int64
+		formatString: #,0
+		displayFolder: _Columns
+		lineageTag: 15461977-9721-4e54-9241-40fe3376876a
+		summarizeBy: sum
+		sourceColumn: Tồn cuối kì chi tiết
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'End of Month'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 6eae5596-72c4-49fc-9633-3173998473de
+		summarizeBy: none
+		sourceColumn: End of Month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Fact_Stock_Data = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Unicorn_Data_KiotViet/Unicorn_Data_KiotViet_XuatNhapTon/")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (5)", each #"Transform File (5)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (5)"}),
+				    #"Expanded Transform File (5)" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (5)", {"Nhóm hàng", "Mã hàng", "Mã vạch", "Tên hàng", "Thương hiệu", "Tồn đầu kì", "SL Nhập", "SL xuất", "Tồn cuối kì", "Chi nhánh", "Tồn đầu kì chi tiết", "SL nhập chi tiết", "SL xuất chi tiết", "Tồn cuối kì chi tiết", "Month"}, {"Nhóm hàng", "Mã hàng", "Mã vạch", "Tên hàng", "Thương hiệu", "Tồn đầu kì", "SL Nhập", "SL xuất", "Tồn cuối kì", "Chi nhánh", "Tồn đầu kì chi tiết", "SL nhập chi tiết", "SL xuất chi tiết", "Tồn cuối kì chi tiết", "Month"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Transform File (5)",{{"Source.Name", type text}, {"Nhóm hàng", type text}, {"Mã hàng", type text}, {"Mã vạch", type text}, {"Tên hàng", type text}, {"Thương hiệu", type text}, {"Tồn đầu kì", Int64.Type}, {"SL Nhập", Int64.Type}, {"SL xuất", Int64.Type}, {"Tồn cuối kì", Int64.Type}, {"Chi nhánh", type text}, {"Tồn đầu kì chi tiết", Int64.Type}, {"SL nhập chi tiết", Int64.Type}, {"SL xuất chi tiết", Int64.Type}, {"Tồn cuối kì chi tiết", Int64.Type}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"Mã hàng", "Chi nhánh", "Tồn cuối kì chi tiết","Month"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Removed Other Columns",{{"Month", type date}}),
+				    #"Inserted End of Month" = Table.AddColumn(#"Changed Type1", "End of Month", each Date.EndOfMonth([Month]), type date),
+				    #"Removed Columns" = Table.RemoveColumns(#"Inserted End of Month",{"Month"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,73 @@
+table Dim_Category
+	lineageTag: 7eb56bdb-2633-4b9e-8a91-de459e058213
+
+	column 'Category All'
+		dataType: string
+		lineageTag: f6e864a7-98a7-4b78-9bd9-afeaea5a2041
+		summarizeBy: none
+		sourceColumn: Category All
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Category Level 1'
+		dataType: string
+		lineageTag: 6ff576db-4c64-41e4-aca2-ae6dab7b879e
+		summarizeBy: none
+		sourceColumn: Category Level 1
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Category Level 2'
+		dataType: string
+		lineageTag: 5aad41cf-a623-4bc8-bad6-04da273c6d1f
+		summarizeBy: none
+		sourceColumn: Category Level 2
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Category Level 3'
+		dataType: string
+		lineageTag: 981c36fc-6d5d-49b9-8be1-e5c967f05244
+		summarizeBy: none
+		sourceColumn: Category Level 3
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'A .Category Level 1 Hierarchy'
+		lineageTag: 05ee3bb6-9337-48d7-a01f-4a1c12fe2a91
+
+		level 'Category Level 1'
+			lineageTag: b5745671-7f2d-4031-ab8e-03782f4d1dc0
+			column: 'Category Level 1'
+
+		level 'Category Level 2'
+			lineageTag: 23ce6f19-897a-454c-8f10-e5ac9fcd38ec
+			column: 'Category Level 2'
+
+		level 'Category Level 3'
+			lineageTag: 50df207e-4fbd-4869-be54-0cb395dbaacc
+			column: 'Category Level 3'
+
+	partition Dim_Category = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/Unicorn_Dim_Product/")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (4)", each #"Transform File (4)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (4)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (4)", Table.ColumnNames(#"Transform File (4)"(#"Sample File (4)"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"Loại hàng", type text}, {"Nhóm hàng(3 Cấp)", type text}, {"Mã hàng", type text}, {"Mã vạch", type any}, {"Tên hàng", type text}, {"Thương hiệu", type text}, {"Giá bán", Int64.Type}, {"Tồn kho", Int64.Type}, {"Đặt NCC", Int64.Type}, {"KH đặt", Int64.Type}, {"Dự kiến hết hàng", type text}, {"Tồn nhỏ nhất", Int64.Type}, {"Tồn lớn nhất", Int64.Type}, {"ĐVT", type any}, {"Thuộc tính", type any}, {"Mã HH Liên quan", type any}, {"Hình ảnh (url1,url2...)", type any}, {"Trọng lượng", Int64.Type}, {"Tích điểm", Int64.Type}, {"Điểm thưởng", Int64.Type}, {"Đang kinh doanh", Int64.Type}, {"Được bán trực tiếp", Int64.Type}, {"Mô tả", type any}, {"Mẫu ghi chú", type any}, {"Vị trí", type any}, {"Hàng thành phần", type text}}),
+				    #"Removed Other Columns2" = Table.SelectColumns(#"Changed Type",{"Nhóm hàng(3 Cấp)"}),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Removed Other Columns2", "Nhóm hàng(3 Cấp)", "Nhóm hàng(3 Cấp) - Copy"),
+				    #"Split Column by Delimiter" = Table.SplitColumn(#"Duplicated Column", "Nhóm hàng(3 Cấp) - Copy", Splitter.SplitTextByDelimiter(">>", QuoteStyle.Csv), {"Nhóm hàng(3 Cấp) - Copy.1", "Nhóm hàng(3 Cấp) - Copy.2", "Nhóm hàng(3 Cấp) - Copy.3"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Split Column by Delimiter",{ {"Nhóm hàng(3 Cấp) - Copy.1", "Category Level 1"}, {"Nhóm hàng(3 Cấp) - Copy.2", "Category Level 2"}, {"Nhóm hàng(3 Cấp) - Copy.3", "Category Level 3"}}),
+				    #"Removed Duplicates" = Table.Distinct(#"Renamed Columns", {"Nhóm hàng(3 Cấp)"}),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Removed Duplicates",{{"Nhóm hàng(3 Cấp)", "Category All"}})
+				in
+				    #"Renamed Columns2"
+
+	annotation PBI_ResultType = Table
+

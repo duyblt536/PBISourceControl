@@ -1,0 +1,7 @@
+role 'Brand Romand'
+	modelPermission: read
+
+	tablePermission Dim_Brand = [Brand] == "Romand" || [Brand] == "Nuse"
+
+	annotation PBI_Id = 23e70e54d5f745d8bcdda541ea2a1645
+

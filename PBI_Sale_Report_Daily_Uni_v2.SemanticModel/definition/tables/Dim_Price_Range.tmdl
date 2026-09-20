@@ -1,0 +1,51 @@
+table Dim_Price_Range
+	lineageTag: c9e589e3-d4a9-4103-974f-4488deb63ea2
+
+	column Price_range
+		dataType: string
+		lineageTag: 7761a49b-4d5c-44ac-bc9b-b996d8c88a14
+		summarizeBy: none
+		sourceColumn: Price_range
+		sortByColumn: No
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Promotion Gift'
+		dataType: string
+		lineageTag: 0a80493f-0091-423c-a1ce-bb37021b0b99
+		summarizeBy: none
+		sourceColumn: Promotion Gift
+
+		annotation SummarizationSetBy = Automatic
+
+	column No
+		dataType: int64
+		formatString: 0
+		lineageTag: ab977701-fbef-4ddb-966b-6ee03fec3714
+		summarizeBy: none
+		sourceColumn: No
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = User
+
+	partition Dim_Price_Range = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Name] = "Dim_Price_Range.xlsx")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (18)", each #"Transform File (18)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (18)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (18)", Table.ColumnNames(#"Transform File (18)"(#"Sample File (18)"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"Price_range", type text}, {"Promotion Gift", type text}, {"No", Int64.Type}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"Price_range", "Promotion Gift", "No"})
+				in
+				    #"Removed Other Columns"
+
+	annotation PBI_ResultType = Table
+

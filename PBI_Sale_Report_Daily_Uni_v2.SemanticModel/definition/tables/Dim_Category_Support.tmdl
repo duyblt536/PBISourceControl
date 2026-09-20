@@ -1,0 +1,57 @@
+table Dim_Category_Support
+	lineageTag: 84e68925-740d-4028-89ae-bef2a2a0303e
+
+	column 'Category All'
+		dataType: string
+		lineageTag: 7bfcdb6d-ac69-4011-9b80-e5b887e12df0
+		summarizeBy: none
+		sourceColumn: Category All
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'CAT All'
+		dataType: string
+		lineageTag: 235e7e5d-d183-44b9-9370-b4a2fe7291dd
+		summarizeBy: none
+		sourceColumn: CAT All
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		dataType: string
+		lineageTag: f35ea479-105e-4c04-91ec-159cdd36f0a4
+		summarizeBy: none
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Category_Support = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/TGSF_Dim_Product/")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (4)", each #"Transform File (4)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (4)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (4)", Table.ColumnNames(#"Transform File (4)"(#"Sample File (4)"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"Loại hàng", type text}, {"Nhóm hàng(3 Cấp)", type text}, {"Mã hàng", type text}, {"Mã vạch", type any}, {"Tên hàng", type text}, {"Thương hiệu", type text}, {"Giá bán", Int64.Type}, {"Tồn kho", Int64.Type}, {"Đặt NCC", Int64.Type}, {"KH đặt", Int64.Type}, {"Dự kiến hết hàng", type text}, {"Tồn nhỏ nhất", Int64.Type}, {"Tồn lớn nhất", Int64.Type}, {"ĐVT", type any}, {"Thuộc tính", type any}, {"Mã HH Liên quan", type any}, {"Hình ảnh (url1,url2...)", type any}, {"Trọng lượng", Int64.Type}, {"Tích điểm", Int64.Type}, {"Điểm thưởng", Int64.Type}, {"Đang kinh doanh", Int64.Type}, {"Được bán trực tiếp", Int64.Type}, {"Mô tả", type any}, {"Mẫu ghi chú", type any}, {"Vị trí", type any}, {"Hàng thành phần", type text}}),
+				    #"Removed Other Columns2" = Table.SelectColumns(#"Changed Type",{"Nhóm hàng(3 Cấp)"}),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Removed Other Columns2", "Nhóm hàng(3 Cấp)", "Nhóm hàng(3 Cấp) - Copy"),
+				    #"Split Column by Delimiter" = Table.SplitColumn(#"Duplicated Column", "Nhóm hàng(3 Cấp) - Copy", Splitter.SplitTextByDelimiter(">>", QuoteStyle.Csv), {"Nhóm hàng(3 Cấp) - Copy.1", "Nhóm hàng(3 Cấp) - Copy.2", "Nhóm hàng(3 Cấp) - Copy.3"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"Nhóm hàng(3 Cấp) - Copy.1", type text}, {"Nhóm hàng(3 Cấp) - Copy.2", type text}, {"Nhóm hàng(3 Cấp) - Copy.3", type text}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type1",{ {"Nhóm hàng(3 Cấp) - Copy.1", "Category Level 1"}, {"Nhóm hàng(3 Cấp) - Copy.2", "Category Level 2"}, {"Nhóm hàng(3 Cấp) - Copy.3", "Category Level 3"}}),
+				    #"Removed Duplicates" = Table.Distinct(#"Renamed Columns", {"Nhóm hàng(3 Cấp)"}),
+				    #"Duplicated Column1" = Table.DuplicateColumn(#"Removed Duplicates", "Category Level 1", "Category Level 1 - Copy"),
+				    #"Duplicated Column2" = Table.DuplicateColumn(#"Duplicated Column1", "Category Level 2", "Category Level 2 - Copy"),
+				    #"Duplicated Column3" = Table.DuplicateColumn(#"Duplicated Column2", "Category Level 3", "Category Level 3 - Copy"),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Duplicated Column3",{{"Category Level 1 - Copy", "CAT LV1"}, {"Category Level 2 - Copy", "CAT LV2"}, {"Category Level 3 - Copy", "CAT LV3"}}),
+				    #"Unpivoted Only Selected Columns" = Table.Unpivot(#"Renamed Columns2", {"CAT LV1", "CAT LV2", "CAT LV3"}, "Attribute", "Value"),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Unpivoted Only Selected Columns",{"Attribute", "Value", "Nhóm hàng(3 Cấp)"}),
+				    #"Renamed Columns3" = Table.RenameColumns(#"Removed Other Columns",{{"Attribute", "CAT All"}, {"Nhóm hàng(3 Cấp)", "Category All"}})
+				in
+				    #"Renamed Columns3"
+
+	annotation PBI_ResultType = Table
+

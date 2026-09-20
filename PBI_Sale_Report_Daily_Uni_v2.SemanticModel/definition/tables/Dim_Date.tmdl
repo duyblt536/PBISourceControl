@@ -1,0 +1,252 @@
+table Dim_Date
+	lineageTag: cbab2aa5-cb8f-4dbd-a318-c2b2eca4f267
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: Short Date
+		lineageTag: f190447a-6f8a-474c-b715-67317cc05afb
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation __PBI_SemanticLinks = [{"LinkTarget":{"TableName":"Dim_Date","TableItemName":"Date (groups)","ObjectType":4},"LinkType":"UsedInGroup"}]
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: eb508b23-583f-4335-bb67-03da576d1a21
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = User
+
+	column Quarter
+		dataType: string
+		lineageTag: c58f7495-9747-4c4f-adb5-acec31de8a8b
+		summarizeBy: none
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: int64
+		formatString: 0
+		lineageTag: 2016b31d-23e9-4d40-aac0-5d27dcfa7c6e
+		summarizeBy: sum
+		sourceColumn: Month
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week of Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: d57b926b-f573-409d-a608-bc3b6036f43d
+		summarizeBy: sum
+		sourceColumn: Week of Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week of Month'
+		dataType: int64
+		formatString: 0
+		lineageTag: 16be2ad2-3134-49b1-91a0-a323b2331ab1
+		summarizeBy: sum
+		sourceColumn: Week of Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day Name'
+		dataType: string
+		lineageTag: d1759916-adc2-4383-a18e-7db5f99ff4ba
+		summarizeBy: none
+		sourceColumn: Day Name
+		sortByColumn: 'Day of Week'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day
+		dataType: int64
+		formatString: 0
+		lineageTag: 13a51cdf-17fd-49bb-ab1d-f20cd41cc4ff
+		summarizeBy: sum
+		sourceColumn: Day
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: 5988f9fb-e913-4083-b46f-fd2191f28ba7
+		summarizeBy: none
+		sourceColumn: Month Name
+		sortByColumn: Month
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year & Week'
+		dataType: string
+		lineageTag: 121bcc62-d921-48f8-a31c-f12118258433
+		summarizeBy: none
+		sourceColumn: Year & Week
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Quarter Name'
+		dataType: string
+		lineageTag: f41c5091-890d-41d1-9788-7affe898f941
+		summarizeBy: none
+		sourceColumn: Quarter Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day of Week' = WEEKDAY(Dim_Date[Date],2)
+		formatString: 0
+		lineageTag: e77ed55e-b936-43e5-b034-d0605bc45cc0
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month of Year'
+		dataType: string
+		lineageTag: de553fb4-04f2-484a-935d-595210587d48
+		summarizeBy: none
+		sourceColumn: Month of Year
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date (groups)' =
+			SWITCH(
+				TRUE,
+				ISBLANK('Dim_Date'[Date]),
+				"(Blank)",
+				'Dim_Date'[Date] IN {DATE(2023, 1, 1),
+					DATE(2023, 2, 2),
+					DATE(2023, 3, 3),
+					DATE(2023, 4, 4),
+					DATE(2023, 5, 5),
+					DATE(2023, 6, 6),
+					DATE(2023, 7, 7),
+					DATE(2023, 8, 8),
+					DATE(2023, 9, 9),
+					DATE(2023, 10, 10),
+					DATE(2023, 11, 11),
+					DATE(2023, 12, 12),
+					DATE(2024, 1, 1),
+					DATE(2024, 2, 2),
+					DATE(2024, 3, 3),
+					DATE(2024, 4, 4),
+					DATE(2024, 5, 5),
+					DATE(2024, 6, 6),
+					DATE(2024, 7, 7),
+					DATE(2024, 8, 8),
+					DATE(2024, 9, 9),
+					DATE(2024, 10, 10),
+					DATE(2024, 11, 11),
+					DATE(2024, 12, 12)},
+				"Double Day",
+				"Other"
+			)
+		lineageTag: 3ca62345-2d68-4548-8c87-afefcc9e5d06
+		summarizeBy: none
+
+		extendedProperty GroupingMetadata =
+				{
+				  "version": 0,
+				  "groupedColumns": [
+				    {
+				      "Column": {
+				        "Expression": {
+				          "SourceRef": {
+				            "Entity": "Dim_Date"
+				          }
+				        },
+				        "Property": "Date"
+				      }
+				    }
+				  ]
+				}
+
+		annotation GroupingDesignState = {"Version":0,"Sources":[{"Name":"d","Entity":"Dim_Date"}],"GroupedColumns":[{"Column":{"Expression":{"SourceRef":{"Source":"d"}},"Property":"Date"}}],"GroupItems":[{"DisplayName":"(Blank)","BlankDefaultPlaceholder":true},{"DisplayName":"Double Day","Expression":{"In":{"Expressions":[{"Column":{"Expression":{"SourceRef":{"Source":"d"}},"Property":"Date"}}],"Values":[[{"Literal":{"Value":"datetime'2023-01-01T00:00:00'"}}],[{"Literal":{"Value":"datetime'2023-02-02T00:00:00'"}}],[{"Literal":{"Value":"datetime'2023-03-03T00:00:00'"}}],[{"Literal":{"Value":"datetime'2023-04-04T00:00:00'"}}],[{"Literal":{"Value":"datetime'2023-05-05T00:00:00'"}}],[{"Literal":{"Value":"datetime'2023-06-06T00:00:00'"}}],[{"Literal":{"Value":"datetime'2023-07-07T00:00:00'"}}],[{"Literal":{"Value":"datetime'2023-08-08T00:00:00'"}}],[{"Literal":{"Value":"datetime'2023-09-09T00:00:00'"}}],[{"Literal":{"Value":"datetime'2023-10-10T00:00:00'"}}],[{"Literal":{"Value":"datetime'2023-11-11T00:00:00'"}}],[{"Literal":{"Value":"datetime'2023-12-12T00:00:00'"}}],[{"Literal":{"Value":"datetime'2024-01-01T00:00:00'"}}],[{"Literal":{"Value":"datetime'2024-02-02T00:00:00'"}}],[{"Literal":{"Value":"datetime'2024-03-03T00:00:00'"}}],[{"Literal":{"Value":"datetime'2024-04-04T00:00:00'"}}],[{"Literal":{"Value":"datetime'2024-05-05T00:00:00'"}}],[{"Literal":{"Value":"datetime'2024-06-06T00:00:00'"}}],[{"Literal":{"Value":"datetime'2024-07-07T00:00:00'"}}],[{"Literal":{"Value":"datetime'2024-08-08T00:00:00'"}}],[{"Literal":{"Value":"datetime'2024-09-09T00:00:00'"}}],[{"Literal":{"Value":"datetime'2024-10-10T00:00:00'"}}],[{"Literal":{"Value":"datetime'2024-11-11T00:00:00'"}}],[{"Literal":{"Value":"datetime'2024-12-12T00:00:00'"}}]]}}},{"DisplayName":"Other"}]}
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsPast =
+			//Tạo cột phụ, tính ngày bán hàng đến thời điểm hiện tại, trả về kết quả True/False, để khi dùng tính LY, PM sẽ trả về thời gian tương ứng cùng kỳ, không hiển thị dư
+			Var LastSaleDate = Max (Fact_Product_Sale[Order Date])
+			Var LastSaleDatePY = EDATE(LastSaleDate,-12)
+			RETURN
+			Dim_Date[Date] <= LastSaleDatePY
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 8bd765b0-e6d6-47d5-8902-243d9b6d6537
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekNum = YEAR(Dim_Date[Date])&"-W"&FORMAT(WEEKNUM(Dim_Date[Date],1),"00")
+		lineageTag: 77f6d0f6-26d2-4085-b34b-2588064afc6a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'Date Hierarchy'
+		lineageTag: de9cf9d7-0494-4a2f-a193-1e7673fba954
+
+		level Year
+			lineageTag: 102a061c-fc67-4a9f-9e84-177f465e6ff8
+			column: Year
+
+		level Month
+			lineageTag: 53a21f60-7f88-4246-9467-01139835c66b
+			column: Month
+
+	partition Dim_Date = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows1" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/TGSF_Dim_Product/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/Unicorn_Dim_Product/") and ([Name] = "Dim_Date.xlsx")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows1", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (6)", each #"Transform File (6)"([Content])),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Invoke Custom Function1", {"Transform File (6)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (6)", Table.ColumnNames(#"Transform File (6)"(#"Sample File (6)"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Date", type date}}),
+				    #"Inserted Year" = Table.AddColumn(#"Changed Type", "Year", each Date.Year([Date]), Int64.Type),
+				    #"Inserted Quarter" = Table.AddColumn(#"Inserted Year", "Quarter", each Date.QuarterOfYear([Date]), Int64.Type),
+				    #"Inserted Month" = Table.AddColumn(#"Inserted Quarter", "Month", each Date.Month([Date]), Int64.Type),
+				    #"Inserted Month Name" = Table.AddColumn(#"Inserted Month", "Month Name", each Date.MonthName([Date]), type text),
+				    #"Inserted Week of Year" = Table.AddColumn(#"Inserted Month Name", "Week of Year", each Date.WeekOfYear([Date]), Int64.Type),
+				    #"Inserted Week of Month" = Table.AddColumn(#"Inserted Week of Year", "Week of Month", each Date.WeekOfMonth([Date]), Int64.Type),
+				    #"Inserted Day Name" = Table.AddColumn(#"Inserted Week of Month", "Day Name", each Date.DayOfWeekName([Date]), type text),
+				    #"Inserted Day" = Table.AddColumn(#"Inserted Day Name", "Day", each Date.Day([Date]), Int64.Type),
+				    #"Split Column by Position" = Table.SplitColumn(#"Inserted Day", "Month Name", Splitter.SplitTextByPositions({0, 3}, false), {"Month Name.1", "Month Name.2"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Split Column by Position",{{"Month Name.1", type text}, {"Month Name.2", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type1",{"Month Name.2"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"Month Name.1", "Month Name"}}),
+				    #"Inserted Merged Column" = Table.AddColumn(#"Renamed Columns", "Week Year", each Text.Combine({Text.From([Year], "en-US"), Text.From([Week of Year], "en-US")}, "-"), type text),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Inserted Merged Column",{{"Week Year", "Year & Week"}}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Renamed Columns1",{{"Quarter", type text}}),
+				    #"Added Custom" = Table.AddColumn(#"Changed Type2", "Custom", each "Q"&[Quarter]),
+				    #"Changed Type3" = Table.TransformColumnTypes(#"Added Custom",{{"Custom", type text}}),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Changed Type3",{{"Custom", "Quarter Name"}}),
+				    #"Inserted Merged Column1" = Table.AddColumn(#"Renamed Columns2", "Month of Year", each Text.Combine({Text.From([Year], "en-US"), Text.From([Month], "en-US")}, "-"), type text)
+				in
+				    #"Inserted Merged Column1"
+
+	annotation PBI_ResultType = Table
+

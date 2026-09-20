@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "6e5d54486a18d7536587",
+  "position": {
+    "x": 0,
+    "y": 202.10569024469024,
+    "z": 3000,
+    "height": 132.45109188552888,
+    "width": 150.16535433070868,
+    "tabOrder": 2000
+  },
+  "visualGroup": {
+    "displayName": "Text Search",
+    "groupMode": "ScaleMode"
+  }
+}

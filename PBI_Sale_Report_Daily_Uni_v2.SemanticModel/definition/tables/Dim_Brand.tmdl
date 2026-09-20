@@ -1,0 +1,31 @@
+table Dim_Brand
+	lineageTag: b083069c-4a0b-4b88-8bc0-f8f89bf2b352
+
+	column Brand
+		dataType: string
+		lineageTag: c5a8998b-b0f5-421c-8481-def2c3036726
+		summarizeBy: none
+		sourceColumn: Brand
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Brand = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows1" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Unicorn_Data_KiotViet/Unicorn_Data_KiotViet_Order/")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows1", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File", each #"Transform File"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File"}),
+				    #"Expanded Transform File" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File", {"Nhóm hàng", "Mã hàng", "Mã vạch", "Tên hàng", "Thương hiệu", "SL Bán", "Giá trị niêm yết", "Doanh thu", "Chênh lệch", "SL trả", "Giá trị trả", "Doanh thu thuần", "Mã hóa đơn", "Chi nhánh", "Thời gian", "Nhân viên", "Khách hàng", "SL", "Giá trị niêm yết chi tiết", "Doanh thu chi tiết", "Chênh lệch chi tiết"}, {"Nhóm hàng", "Mã hàng", "Mã vạch", "Tên hàng", "Thương hiệu", "SL Bán", "Giá trị niêm yết", "Doanh thu", "Chênh lệch", "SL trả", "Giá trị trả", "Doanh thu thuần", "Mã hóa đơn", "Chi nhánh", "Thời gian", "Nhân viên", "Khách hàng", "SL", "Giá trị niêm yết chi tiết", "Doanh thu chi tiết", "Chênh lệch chi tiết"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Transform File",{{"Source.Name", type text}, {"Nhóm hàng", type text}, {"Mã hàng", type text}, {"Mã vạch", type any}, {"Tên hàng", type text}, {"Thương hiệu", type text}, {"SL Bán", Int64.Type}, {"Giá trị niêm yết", Int64.Type}, {"Doanh thu", Int64.Type}, {"Chênh lệch", Int64.Type}, {"SL trả", Int64.Type}, {"Giá trị trả", Int64.Type}, {"Doanh thu thuần", Int64.Type}, {"Mã hóa đơn", type text}, {"Chi nhánh", type text}, {"Thời gian", type datetime}, {"Nhân viên", type text}, {"Khách hàng", type text}, {"SL", Int64.Type}, {"Giá trị niêm yết chi tiết", Int64.Type}, {"Doanh thu chi tiết", Int64.Type}, {"Chênh lệch chi tiết", Int64.Type}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"Thương hiệu"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Duplicates",{{"Thương hiệu", "Brand"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

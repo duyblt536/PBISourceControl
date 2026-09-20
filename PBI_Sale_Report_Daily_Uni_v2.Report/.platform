@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "PBI_Sale_Report_Daily_Uni_v2"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "14898aa4-7101-4b46-9ea9-5ef49356097f"
+  }
+}

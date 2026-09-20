@@ -1,0 +1,961 @@
+expression Parameter1 = #"Sample File" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 67270f0d-ae2c-4496-8d43-7b684d9ebf5c
+	queryGroup: 'Transform File Group\Transform File from KiotViet_Order_Data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File' =
+		let
+		    Source = Excel.Workbook(Parameter1, null, true),
+		    BaoCaoBanHangTheoHangHoa_KV0605_Sheet = Source{[Item="BaoCaoBanHangTheoHangHoa_KV0605",Kind="Sheet"]}[Data],
+		    #"Promoted Headers" = Table.PromoteHeaders(BaoCaoBanHangTheoHangHoa_KV0605_Sheet, [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Nhóm hàng", type text}, {"Mã hàng", Int64.Type}, {"Mã vạch", type text}, {"Tên hàng", type text}, {"Thương hiệu", type text}, {"SL Bán", Int64.Type}, {"Giá trị niêm yết", Int64.Type}, {"Doanh thu", Int64.Type}, {"Chênh lệch", Int64.Type}, {"SL trả", Int64.Type}, {"Giá trị trả", Int64.Type}, {"Doanh thu thuần", Int64.Type}, {"Mã hóa đơn", type text}, {"Chi nhánh", type text}, {"Thời gian", type datetime}, {"Nhân viên", type text}, {"Khách hàng", type text}, {"SL", Int64.Type}, {"Giá trị niêm yết chi tiết", Int64.Type}, {"Doanh thu chi tiết", Int64.Type}, {"Chênh lệch chi tiết", Int64.Type}})
+		in
+		    #"Changed Type"
+	lineageTag: 89a37689-8e1e-419c-a973-3e38688d743b
+	queryGroup: 'Transform File Group\Transform File from KiotViet_Order_Data'
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression 'Sample File' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/TGSF_Data_KiotViet/TGSF_Data_KiotViet_Order/")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: fc315962-9d87-411c-95e1-fdd8592d0193
+	queryGroup: 'Transform File Group\Transform File from KiotViet_Order_Data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression 'Transform File' =
+		let
+		    Source = (Parameter1 as binary) => let
+		    Source = Excel.Workbook(Parameter1, null, true),
+		    ProductBySaleRecordTable_Table = Source{[Item="ProductBySaleRecordTable",Kind="Table"]}[Data]
+		in
+		    ProductBySaleRecordTable_Table
+		in
+		    Source
+	lineageTag: 05bcf270-f114-47aa-9c0b-5135b007ef91
+	queryGroup: 'Transform File Group\Transform File from KiotViet_Order_Data\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression Parameter2 = #"Sample File (2)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (2)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: d3b25ff5-ef12-4d5f-997f-598ff211aadd
+	queryGroup: 'Transform File Group\Transform File from KiotViet_HoaDon_Data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (2)' =
+		let
+		    Source = Excel.Workbook(Parameter2, null, true),
+		    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data]
+		in
+		    Table1_Table
+	lineageTag: c4bb106c-ce2e-4a36-9d22-74a728399628
+	queryGroup: 'Transform File Group\Transform File from KiotViet_HoaDon_Data'
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (2)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/TGSF_Data_KiotViet/TGSF_Data_KiotViet_HoaDon/")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: f0f1c6b0-0235-4b69-a008-1b1da3d0733a
+	queryGroup: 'Transform File Group\Transform File from KiotViet_HoaDon_Data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression 'Transform File (2)' =
+		let
+		    Source = (Parameter2 as binary) => let
+		    Source = Excel.Workbook(Parameter2, null, true),
+		    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data]
+		in
+		    Table1_Table
+		in
+		    Source
+	lineageTag: d99de696-f1fe-435b-bc68-a16f5ae3ff29
+	queryGroup: 'Transform File Group\Transform File from KiotViet_HoaDon_Data\Helper Queries'
+
+	annotation PBI_ResultType = Exception
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression Parameter3 = #"Sample File (3)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (3)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 2390f18a-77fc-4a17-b1ca-dbce6f9ed399
+	queryGroup: 'Transform File Group\Transform File from KiotViet_TraHang_Data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (3)' =
+		let
+		    Source = Excel.Workbook(Parameter3, null, true),
+		    returnTable_Table = Source{[Item="returnTable",Kind="Table"]}[Data]
+		in
+		    returnTable_Table
+	lineageTag: 4c3cbd0d-667b-4ba3-9394-1ddf16ec8d85
+	queryGroup: 'Transform File Group\Transform File from KiotViet_TraHang_Data'
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (3)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/TGSF_Data_KiotViet/TGSF_Data_KiotViet_TraHang/")),
+		    Content0 = #"Filtered Rows"{0}[Content]
+		in
+		    Content0
+	lineageTag: 30e403c4-58f3-44a4-94ca-dbdaff6ab08c
+	queryGroup: 'Transform File Group\Transform File from KiotViet_TraHang_Data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression 'Transform File (3)' =
+		let
+		    Source = (Parameter3 as binary) => let
+		    Source = Excel.Workbook(Parameter3, null, true),
+		    returnTable_Table = Source{[Item="returnTable",Kind="Table"]}[Data]
+		in
+		    returnTable_Table
+		in
+		    Source
+	lineageTag: 2642d196-1fd1-4adb-925b-d9fb252ac4fe
+	queryGroup: 'Transform File Group\Transform File from KiotViet_TraHang_Data\Helper Queries'
+
+	annotation PBI_ResultType = Exception
+
+expression 0_Append_KiotViet_HoaDon_Data =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Unicorn_Data_KiotViet/Unicorn_Data_KiotViet_HoaDon/")),
+		    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+		    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (16)", each #"Transform File (16)"([Content])),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+		    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (16)"}),
+		    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (16)", Table.ColumnNames(#"Transform File (16)"(#"Sample File (16)"))),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"Mã hóa đơn", type text}, {"Trạng thái giao hàng", type text}, {"Thời gian", type number}, {"Chi nhánh", type text}, {"Kênh bán", type text}, {"Trạng thái", type text}}),
+		    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"Mã hóa đơn", "Trạng thái giao hàng", "Thời gian", "Chi nhánh", "Kênh bán", "Trạng thái"}),
+		    #"Changed Type1" = Table.TransformColumnTypes(#"Removed Other Columns",{{"Thời gian", type datetime}})
+		in
+		    #"Changed Type1"
+	lineageTag: 3fa022fe-ba1b-4857-9179-ef6bb690d720
+	queryGroup: 'append & Merge file'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 0_Append_Fact_KiotViet_TraHang_Data =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows1" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Unicorn_Data_KiotViet/Unicorn_Data_KiotViet_TraHang/")),
+		    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows1", each [Attributes]?[Hidden]? <> true),
+		    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (3)", each #"Transform File (3)"([Content])),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+		    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (3)"}),
+		    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (3)", Table.ColumnNames(#"Transform File (3)"(#"Sample File (3)"))),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"Mã trả hàng", type text}, {"Mã hóa đơn", type text}, {"Mã vận đơn bán", type text}, {"Người bán", type text}, {"Thời gian", type datetime}, {"Thời gian tạo", type number}, {"Khách hàng", type text}, {"Chi nhánh", type text}, {"Người nhận trả", type text}, {"Người tạo", type text}, {"Kênh bán", type text}, {"Ghi chú", type text}, {"Tổng tiền hàng trả", Int64.Type}, {"Giảm giá", Int64.Type}, {"Tổng sau giảm giá", Int64.Type}, {"Phí trả hàng", Int64.Type}, {"Thu khác hoàn lại", Int64.Type}, {"Cần trả khách", Int64.Type}, {"Đã trả khách", Int64.Type}, {"Trạng thái", type text}}),
+		    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"Mã trả hàng", "Thời gian", "Chi nhánh", "Kênh bán","Trạng thái"}),
+		    #"Renamed Mã hóa đơn" = Table.RenameColumns(#"Removed Other Columns",{{"Mã trả hàng", "Mã hóa đơn"}}),
+		    #"Added Custom" = Table.AddColumn(#"Renamed Mã hóa đơn", "Custom", each "Đã trả hàng"),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Added Custom",{"Mã hóa đơn", "Custom", "Thời gian", "Chi nhánh", "Kênh bán", "Trạng thái"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Reordered Columns",{{"Custom", "Trạng thái giao hàng"}}),
+		    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns",{{"Trạng thái giao hàng", type text}})
+		in
+		    #"Changed Type1"
+	lineageTag: a831bda8-c31b-4b67-9043-91609d2d6977
+	queryGroup: 'append & Merge file'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Parameter4 = #"Sample File (4)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (4)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 57f5b5ee-9305-4141-b008-f9124efd5f95
+	queryGroup: 'Transform File Group\Transform File from Dim_Product\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (4)' =
+		let
+		    Source = Excel.Workbook(Parameter4, null, true),
+		    productTable_Table = Source{[Item="productTable",Kind="Table"]}[Data]
+		in
+		    productTable_Table
+	lineageTag: cdaef170-8c19-43b1-ab94-f2e3d3c60dd5
+	queryGroup: 'Transform File Group\Transform File from Dim_Product'
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (4)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/TGSF_Dim_Product/")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: a1e1f92a-ee56-4ac6-8c9e-897654e87872
+	queryGroup: 'Transform File Group\Transform File from Dim_Product\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression 'Transform File (4)' =
+		let
+		    Source = (Parameter4 as binary) => let
+		    Source = Excel.Workbook(Parameter4, null, true),
+		    productTable_Table = Source{[Item="productTable",Kind="Table"]}[Data]
+		in
+		    productTable_Table
+		in
+		    Source
+	lineageTag: 6e8ef8bd-c12e-443b-8b1b-efbdbb6c7574
+	queryGroup: 'Transform File Group\Transform File from Dim_Product\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression Parameter5 = #"Sample File (5)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (5)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 65753701-6cae-42ce-be18-71a080b91004
+	queryGroup: 'Transform File Group\Transform File from KiotViet_Stock_Data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (5)' =
+		let
+		    Source = Excel.Workbook(Parameter5, null, true),
+		    ProductInOutStockAllRecordTable_Table = Source{[Item="ProductInOutStockAllRecordTable",Kind="Table"]}[Data]
+		in
+		    ProductInOutStockAllRecordTable_Table
+	lineageTag: a4ecc948-009e-4173-9f42-38dc0bfd53b4
+	queryGroup: 'Transform File Group\Transform File from KiotViet_Stock_Data'
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (5)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/TGSF_Data_KiotViet/TGSF_Data_KiotViet_XuatNhapTon/")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: fc0b0e12-891c-46cb-8742-f07378555f3b
+	queryGroup: 'Transform File Group\Transform File from KiotViet_Stock_Data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression 'Transform File (5)' =
+		let
+		    Source = (Parameter5 as binary) => let
+		    Source = Excel.Workbook(Parameter5, null, true),
+		    ProductInOutStockAllRecordTable_Table = Source{[Item="ProductInOutStockAllRecordTable",Kind="Table"]}[Data]
+		in
+		    ProductInOutStockAllRecordTable_Table
+		in
+		    Source
+	lineageTag: 1d54a225-ea66-4aff-955c-663890145759
+	queryGroup: 'Transform File Group\Transform File from KiotViet_Stock_Data\Helper Queries'
+
+	annotation PBI_ResultType = Exception
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression Parameter6 = #"Sample File (6)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (6)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 1de0b47b-fe85-40e0-bf2a-d28fdd8bcb7f
+	queryGroup: 'Transform File Group\Transform File from Dim_Date\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (6)' =
+		let
+		    Source = Excel.Workbook(Parameter6, null, true),
+		    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data]
+		in
+		    Table1_Table
+	lineageTag: 9bcc277f-27cf-4570-98e7-a5d7ade3b2ab
+	queryGroup: 'Transform File Group\Transform File from Dim_Date'
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (6)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows1" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/TGSF_Dim_Product/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/Unicorn_Dim_Product/") and ([Name] = "Dim_Date.xlsx")),
+		    #"Removed Other Columns" = Table.SelectColumns(#"Filtered Rows1",{"Content"}),
+		    Navigation1 = #"Removed Other Columns"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: 0a71be37-eada-4904-85b7-b71bacfd0a95
+	queryGroup: 'Transform File Group\Transform File from Dim_Date\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File (6)' =
+		let
+		    Source = (Parameter6 as binary) => let
+		    Source = Excel.Workbook(Parameter6, null, true),
+		    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data]
+		in
+		    Table1_Table
+		in
+		    Source
+	lineageTag: 0be08adc-049e-4b2a-8151-339e2358bb05
+	queryGroup: 'Transform File Group\Transform File from Dim_Date\Helper Queries'
+
+	annotation PBI_ResultType = Exception
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression Parameter7 = #"Sample File (7)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (7)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 0c427a7c-5e3d-45a7-98b0-53471022203a
+	queryGroup: 'Transform File Group\Transform File from Dim_Channel\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (7)' =
+		let
+		    Source = Excel.Workbook(Parameter7, null, true),
+		    Table2_Table = Source{[Item="Table2",Kind="Table"]}[Data]
+		in
+		    Table2_Table
+	lineageTag: d3bb41a8-6b64-4b0e-b5a8-c7299f5d41e5
+	queryGroup: 'Transform File Group\Transform File from Dim_Channel'
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (7)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/TGSF_Dim_Product/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/Unicorn_Dim_Product/") and ([Name] = "Dim_Channel.xlsx")),
+		    #"Removed Other Columns" = Table.SelectColumns(#"Filtered Rows",{"Content"}),
+		    Navigation1 = #"Removed Other Columns"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: f56968f8-0f97-40f3-86fe-78f5a8a9cc9f
+	queryGroup: 'Transform File Group\Transform File from Dim_Channel\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File (7)' =
+		let
+		    Source = (Parameter7 as binary) => let
+		    Source = Excel.Workbook(Parameter7, null, true),
+		    Table2_Table = Source{[Item="Table2",Kind="Table"]}[Data]
+		in
+		    Table2_Table
+		in
+		    Source
+	lineageTag: 72f7515c-71da-4116-91a4-aa6d54c0e19d
+	queryGroup: 'Transform File Group\Transform File from Dim_Channel\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression Parameter8 = #"Sample File (8)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (8)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: e16eec8e-51cb-4841-94b4-52703da8b498
+	queryGroup: 'Transform File Group\Transform File from Dim_Warehouse\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (8)' =
+		let
+		    Source = Excel.Workbook(Parameter8, null, true),
+		    Dim_Warehouse_Table = Source{[Item="Dim_Warehouse",Kind="Table"]}[Data]
+		in
+		    Dim_Warehouse_Table
+	lineageTag: 6cbfcefa-ee2d-4884-bfc4-8ad7331bde36
+	queryGroup: 'Transform File Group\Transform File from Dim_Warehouse'
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (8)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/TGSF_Dim_Product/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/Unicorn_Dim_Product/") and ([Name] = "Dim_Warehouse.xlsx")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: ebe2e592-42b8-435c-8764-2b6f23c46808
+	queryGroup: 'Transform File Group\Transform File from Dim_Warehouse\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File (8)' =
+		let
+		    Source = (Parameter8 as binary) => let
+		    Source = Excel.Workbook(Parameter8, null, true),
+		    Dim_Warehouse_Table = Source{[Item="Dim_Warehouse",Kind="Table"]}[Data]
+		in
+		    Dim_Warehouse_Table
+		in
+		    Source
+	lineageTag: 9b1ce1b9-0b18-402f-a7f9-65bd14023755
+	queryGroup: 'Transform File Group\Transform File from Dim_Warehouse\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression Parameter9 = #"Sample File (9)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (9)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 13ce2173-7e08-4e7a-8d93-99158476a136
+	queryGroup: 'Transform File Group\Transform File from Dim_Master_Channel\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (9)' =
+		let
+		    Source = Excel.Workbook(Parameter9, null, true),
+		    Dim_Warehouse_Table = Source{[Item="Dim_Warehouse",Kind="Table"]}[Data]
+		in
+		    Dim_Warehouse_Table
+	lineageTag: 39c37ee7-cc68-4698-999c-6c9616087a7d
+	queryGroup: 'Transform File Group\Transform File from Dim_Master_Channel'
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (9)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/TGSF_Dim_Product/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/Unicorn_Dim_Product/") and ([Name] = "Dim_Warehouse.xlsx")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: d75cd4ba-1eac-43a6-82c4-0d30d682065a
+	queryGroup: 'Transform File Group\Transform File from Dim_Master_Channel\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File (9)' =
+		let
+		    Source = (Parameter9 as binary) => let
+		    Source = Excel.Workbook(Parameter9, null, true),
+		    Dim_Warehouse_Table = Source{[Item="Dim_Warehouse",Kind="Table"]}[Data]
+		in
+		    Dim_Warehouse_Table
+		in
+		    Source
+	lineageTag: 2c28543c-da69-4b5a-b8d0-be9cf0d9259e
+	queryGroup: 'Transform File Group\Transform File from Dim_Master_Channel\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression Parameter10 = #"Sample File (10)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (10)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: f6471960-68c4-4ead-b037-3d62d00f7079
+	queryGroup: 'Transform File Group\Transform File from Dim_Han_Key_SKU\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (10)' =
+		let
+		    Source = Excel.Workbook(Parameter10, null, true),
+		    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data]
+		in
+		    Table1_Table
+	lineageTag: 21e714aa-215a-4e13-9de1-a00459a4169a
+	queryGroup: 'Transform File Group\Transform File from Dim_Han_Key_SKU'
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (10)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Name] = "PM_Han_Key_SKU_6M_20240412.xlsx")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: a0ce8283-96eb-4d85-a527-87d93013d249
+	queryGroup: 'Transform File Group\Transform File from Dim_Han_Key_SKU\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File (10)' =
+		let
+		    Source = (Parameter10 as binary) => let
+		    Source = Excel.Workbook(Parameter10, null, true),
+		    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data]
+		in
+		    Table1_Table
+		in
+		    Source
+	lineageTag: 9cf4bd0c-6cbe-40c5-a156-6e1ecb7bec25
+	queryGroup: 'Transform File Group\Transform File from Dim_Han_Key_SKU\Helper Queries'
+
+	annotation PBI_ResultType = Exception
+
+expression Parameter11 = #"Sample File (11)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (11)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: ce75f852-54bc-4338-bb81-e7653dcecab9
+	queryGroup: 'Transform File Group\Transform File from VanDon\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (11)' =
+		let
+		    Source = Excel.Workbook(Parameter11, null, true),
+		    returnTable_Table = Source{[Item="returnTable",Kind="Table"]}[Data]
+		in
+		    returnTable_Table
+	lineageTag: ee660ace-f7d8-46e8-afc0-7f83700ed805
+	queryGroup: 'Transform File Group\Transform File from VanDon'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (11)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/TGSF_Data_KiotViet/TGSF_Data_KiotViet_VanDon/")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: 7c0c705b-ca1f-4e74-8603-f86a0506257a
+	queryGroup: 'Transform File Group\Transform File from VanDon\Helper Queries'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File (11)' =
+		let
+		    Source = (Parameter11 as binary) => let
+		    Source = Excel.Workbook(Parameter11, null, true),
+		    returnTable_Table = Source{[Item="returnTable",Kind="Table"]}[Data]
+		in
+		    returnTable_Table
+		in
+		    Source
+	lineageTag: 9c975ed8-ec7d-4789-822d-0a9d66fdbd6e
+	queryGroup: 'Transform File Group\Transform File from VanDon\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression Parameter12 = #"Sample File (12)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (12)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 4e302336-e520-4b73-9fd3-829ba7a89c74
+	queryGroup: 'Transform File Group\Transform File from Dim_Location\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (12)' =
+		let
+		    Source = Excel.Workbook(Parameter12, null, true),
+		    Location_Table = Source{[Item="Location",Kind="Table"]}[Data]
+		in
+		    Location_Table
+	lineageTag: 505f57da-df23-424d-ac3b-73d4d82f268d
+	queryGroup: 'Transform File Group\Transform File from Dim_Location'
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression 'Sample File (12)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Name] = "Dim_Location.xlsx")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: 696709d5-d9e0-4e4c-a5bf-ea491a6759f4
+	queryGroup: 'Transform File Group\Transform File from Dim_Location\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File (12)' =
+		let
+		    Source = (Parameter12 as binary) => let
+		    Source = Excel.Workbook(Parameter12, null, true),
+		    Location_Table = Source{[Item="Location",Kind="Table"]}[Data]
+		in
+		    Location_Table
+		in
+		    Source
+	lineageTag: 33e00415-254c-44ec-b02b-933257257546
+	queryGroup: 'Transform File Group\Transform File from Dim_Location\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression Parameter13 = #"Sample File (13)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (13)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 89e276cb-a1e0-4956-9d15-faae51d4ab88
+	queryGroup: 'Transform File Group\Transform File from Dim_Location_Mien_No\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (13)' =
+		let
+		    Source = Excel.Workbook(Parameter13, null, true),
+		    Location_Table = Source{[Item="Location",Kind="Table"]}[Data]
+		in
+		    Location_Table
+	lineageTag: 42128c47-52c4-464f-9d71-ee75f20ab17d
+	queryGroup: 'Transform File Group\Transform File from Dim_Location_Mien_No'
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression 'Sample File (13)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Name] = "Dim_Location_Mien_Number.xlsx")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: 5ad34c14-eac9-4898-b477-e79f274764cc
+	queryGroup: 'Transform File Group\Transform File from Dim_Location_Mien_No\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File (13)' =
+		let
+		    Source = (Parameter13 as binary) => let
+		    Source = Excel.Workbook(Parameter13, null, true),
+		    Location_Table = Source{[Item="Location",Kind="Table"]}[Data]
+		in
+		    Location_Table
+		in
+		    Source
+	lineageTag: 65af380a-2369-46c9-a86e-f97e7aa5820e
+	queryGroup: 'Transform File Group\Transform File from Dim_Location_Mien_No\Helper Queries'
+
+	annotation PBI_ResultType = Exception
+
+expression Parameter14 = #"Sample File (14)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (14)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: f7eb0803-23b3-4ff9-88ab-bfbeacd80934
+	queryGroup: 'Transform File Group\Transform File from Query1\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (14)' =
+		let
+		    Source = Excel.Workbook(Parameter14, null, true),
+		    SaleByTimeRecordTable_Table = Source{[Item="SaleByTimeRecordTable",Kind="Table"]}[Data]
+		in
+		    SaleByTimeRecordTable_Table
+	lineageTag: 9925dc96-c732-4483-acaf-ae4698511913
+	queryGroup: 'Transform File Group\Transform File from Query1'
+
+	annotation PBI_ResultType = Exception
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression 'Sample File (14)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/TGSF_Data_KiotViet/TGSF_Data_KiotViet_BCBH_ThoiGian/")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: fce57bf6-5847-4fd7-8e91-b9c1d381b99a
+	queryGroup: 'Transform File Group\Transform File from Query1\Helper Queries'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File (14)' =
+		let
+		    Source = (Parameter14 as binary) => let
+		    Source = Excel.Workbook(Parameter14, null, true),
+		    SaleByTimeRecordTable_Table = Source{[Item="SaleByTimeRecordTable",Kind="Table"]}[Data]
+		in
+		    SaleByTimeRecordTable_Table
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transform Sample File (14)""}" ]
+	lineageTag: d0d3fdd0-d628-4b40-91ea-98ab8d5aa3ea
+	queryGroup: 'Transform File Group\Transform File from Query1\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression Parameter15 = #"Sample File (15)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (15)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 3ccbbb0d-31b7-477a-a332-a7d01eaa0621
+	queryGroup: 'Transform File Group\Transform File from Key_SKU_Online\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (15)' =
+		let
+		    Source = Excel.Workbook(Parameter15, null, true),
+		    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data]
+		in
+		    Table1_Table
+	lineageTag: dc2e1c3b-137e-44e9-a0ec-d78726008c47
+	queryGroup: 'Transform File Group\Transform File from Key_SKU_Online'
+
+	annotation PBI_ResultType = Exception
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression 'Sample File (15)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Name] = "TGSF_Key_SKU_Online_202406.xlsx")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: b13f078b-273d-4094-b863-7133443a9e12
+	queryGroup: 'Transform File Group\Transform File from Key_SKU_Online\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression 'Transform File (15)' =
+		let
+		    Source = (Parameter15 as binary) => let
+		    Source = Excel.Workbook(Parameter15, null, true),
+		    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data]
+		in
+		    Table1_Table
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transform Sample File (15)""}" ]
+	lineageTag: 6878743a-c243-43b6-85a7-7987b2deaa11
+	queryGroup: 'Transform File Group\Transform File from Key_SKU_Online\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression Parameter16 = #"Sample File (16)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (16)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 2c2010df-18f8-4a97-9584-2dbb80ae1292
+	queryGroup: 'append & Merge file\Transform File from 0_Append_KiotViet_HoaDon_Data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (16)' =
+		let
+		    Source = Excel.Workbook(Parameter16, null, true),
+		    InvoiceTable_Table = Source{[Item="InvoiceTable",Kind="Table"]}[Data]
+		in
+		    InvoiceTable_Table
+	lineageTag: 1ecf58bb-bb73-47fe-b8b0-b1b0d42defcc
+	queryGroup: 'append & Merge file\Transform File from 0_Append_KiotViet_HoaDon_Data'
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (16)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/TGSF_Data_KiotViet/TGSF_Data_KiotViet_HoaDon/")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: 39a3d2ec-e7ae-40a3-8abc-a1bf0b2b18e1
+	queryGroup: 'append & Merge file\Transform File from 0_Append_KiotViet_HoaDon_Data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File (16)' =
+		let
+		    Source = (Parameter16 as binary) => let
+		    Source = Excel.Workbook(Parameter16, null, true),
+		    InvoiceTable_Table = Source{[Item="InvoiceTable",Kind="Table"]}[Data]
+		in
+		    InvoiceTable_Table
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transform Sample File (16)""}" ]
+	lineageTag: 481c93a4-4cf9-473f-9078-43474ce4331f
+	queryGroup: 'append & Merge file\Transform File from 0_Append_KiotViet_HoaDon_Data\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression Parameter18 = #"Sample File (18)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (18)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 08bafa63-2d09-4bda-958d-e92bfbc4673d
+	queryGroup: 'Transform File Group\Transform File from Dim_Price_Range\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (18)' =
+		let
+		    Source = Excel.Workbook(Parameter18, null, true),
+		    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data]
+		in
+		    Table1_Table
+	lineageTag: 1d0774ca-0921-4573-a7fd-7288a9bbc881
+	queryGroup: 'Transform File Group\Transform File from Dim_Price_Range'
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression 'Sample File (18)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Name] = "Dim_Price_Range.xlsx")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: 4e15f494-6824-4495-94a6-ed8f17b81d1e
+	queryGroup: 'Transform File Group\Transform File from Dim_Price_Range\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression 'Transform File (18)' =
+		let
+		    Source = (Parameter18 as binary) => let
+		    Source = Excel.Workbook(Parameter18, null, true),
+		    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data]
+		in
+		    Table1_Table
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transform Sample File (18)""}" ]
+	lineageTag: 83750d9d-6134-4efe-9bec-fbdb7d130612
+	queryGroup: 'Transform File Group\Transform File from Dim_Price_Range\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression Parameter17 = #"Sample File (17)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (17)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 24d5672f-e7c9-4186-a361-88dd1ce1421c
+	queryGroup: 'Transform File from Unicorn_Dim_Channel (2)\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (17)' =
+		let
+		    Source = Excel.Workbook(Parameter17, null, true),
+		    Unicorn_Dim_Channel_Table = Source{[Item="Unicorn_Dim_Channel",Kind="Table"]}[Data]
+		in
+		    Unicorn_Dim_Channel_Table
+	lineageTag: 336ca46e-07c5-4c52-8436-954b8301b67f
+	queryGroup: 'Transform File from Unicorn_Dim_Channel (2)'
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (17)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows1" = Table.SelectRows(Source, each ([Name] = "Unicorn_Dim_Channel.xlsx")),
+		    Navigation1 = #"Filtered Rows1"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: 82676bd0-f146-4dc4-965a-f04a8c263f24
+	queryGroup: 'Transform File from Unicorn_Dim_Channel (2)\Helper Queries'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File (17)' =
+		let
+		    Source = (Parameter17 as binary) => let
+		    Source = Excel.Workbook(Parameter17, null, true),
+		    Unicorn_Dim_Channel_Table = Source{[Item="Unicorn_Dim_Channel",Kind="Table"]}[Data]
+		in
+		    Unicorn_Dim_Channel_Table
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transform Sample File (17)""}" ]
+	lineageTag: 922fa11e-4b39-4fe7-a799-75ecc52b4040
+	queryGroup: 'Transform File from Unicorn_Dim_Channel (2)\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression Parameter19 = #"Sample File (19)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (19)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 3f9d6a04-fa5a-40e4-a3fc-b87e01bd7bcb
+	queryGroup: 'Transform File from Key_SKU_Online_VY\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (19)' =
+		let
+		    Source = Excel.Workbook(Parameter19, null, true),
+		    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data]
+		in
+		    Table1_Table
+	lineageTag: ab3fec8c-4e35-45ba-b092-18b8bfec6332
+	queryGroup: 'Transform File from Key_SKU_Online_VY'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (19)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Name] = "TGSF_Key_SKU_Online_202406.xlsx")),
+		    Navigation1 = #"Filtered Rows"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: dc34268a-61bc-421b-ba05-b49a9bfb52da
+	queryGroup: 'Transform File from Key_SKU_Online_VY\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File (19)' =
+		let
+		    Source = (Parameter19 as binary) => let
+		    Source = Excel.Workbook(Parameter19, null, true),
+		    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data]
+		in
+		    Table1_Table
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transform Sample File (19)""}" ]
+	lineageTag: 5607a6a2-cf55-4216-96ab-161f6911316c
+	queryGroup: 'Transform File from Key_SKU_Online_VY\Helper Queries'
+
+	annotation PBI_ResultType = Function
+
+expression Parameter20 = #"Sample File (20)" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File (20)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: e46a590d-8e7a-4d71-8e52-e93cf47fa2d6
+	queryGroup: 'Transform File from Dim_Channel (2)\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File (20)' =
+		let
+		    Source = Excel.Workbook(Parameter20, null, true),
+		    Unicorn_Dim_Channel_Table = Source{[Item="Unicorn_Dim_Channel",Kind="Table"]}[Data]
+		in
+		    Unicorn_Dim_Channel_Table
+	lineageTag: 2d3a50ca-0631-43a8-bf3f-ad9ad9f1c8cd
+	queryGroup: 'Transform File from Dim_Channel (2)'
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File (20)' =
+		let
+		    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+		    #"Filtered Rows1" = Table.SelectRows(Source, each ([Name] = "Unicorn_Dim_Channel.xlsx")),
+		    Navigation1 = #"Filtered Rows1"{0}[Content]
+		in
+		    Navigation1
+	lineageTag: 870d07e1-6704-4771-95be-91a4fa752809
+	queryGroup: 'Transform File from Dim_Channel (2)\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File (20)' =
+		let
+		    Source = (Parameter20 as binary) => let
+		    Source = Excel.Workbook(Parameter20, null, true),
+		    Unicorn_Dim_Channel_Table = Source{[Item="Unicorn_Dim_Channel",Kind="Table"]}[Data]
+		in
+		    Unicorn_Dim_Channel_Table
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transform Sample File (20)""}" ]
+	lineageTag: daedda0b-fc8f-4a05-b271-efb7615043ad
+	queryGroup: 'Transform File from Dim_Channel (2)\Helper Queries'
+
+	annotation PBI_ResultType = Function
+

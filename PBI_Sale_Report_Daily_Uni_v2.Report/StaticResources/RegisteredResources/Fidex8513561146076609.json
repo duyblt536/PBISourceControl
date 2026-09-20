@@ -1,0 +1,100 @@
+{
+  "name": "Fidex",
+  "dataColors": [
+    "#627EAB",
+    "#A0D1FF",
+    "#118DFF",
+    "#3ECA74",
+    "#1F2539",
+    "#EA1313",
+    "#F7D169",
+    "#eeeeee"
+  ],
+  "visualStyles": {
+    "card": {
+      "*": {
+        "labels": [
+          {
+            "color": {
+              "solid": {
+                "color": "#000000"
+              }
+            },
+            "labelDisplayUnits": 1,
+            "LabelPrecision": "0",
+            "fontSize": 27,
+            "fontFamily": "Segoe UI Semibold"
+          }
+        ],
+        "border": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "radius": 0
+          }
+        ],
+        "categoryLabels": [
+          {
+            "show": false
+          }
+        ],
+        "title": [
+          {
+            "show": true,
+            "fontColor": {
+              "solid": {
+                "color": "#000000"
+              }
+            },
+            "background": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "alignment": "center",
+            "fontSize": 15,
+            "fontFamily": "Segoe UI Semibold"
+          }
+        ]
+      }
+    }
+  },
+  "textClasses": {
+    "label": {
+      "fontFace": "'Segoe UI Semibold', Segoe UI Semibold, Segoe UI Semibold, Segoe UI Semibold, Segoe UI Semibold"
+    },
+    "title": {
+      "fontFace": "Segoe UI Semibold"
+    }
+  },
+  "icons": {
+    "RomboVerde": {
+      "url": "https://imagizer.imageshack.com/img924/2189/mnImMr.png"
+    },
+    "RomboRojo": {
+      "url": "https://imagizer.imageshack.com/img924/56/ABM31i.png"
+    },
+    "RomboAmarillo": {
+      "url": "https://imagizer.imageshack.com/img922/2403/zKeIyP.png"
+    },
+    "RomboArriba": {
+      "url": "https://imagizer.imageshack.com/img922/9678/sCbYXL.png"
+    },
+    "RomboAbajo": {
+      "url": "https://imagizer.imageshack.com/img924/5236/aXuhsP.png"
+    },
+    "Circle Blue": {
+      "url": "https://imagizer.imageshack.com/img922/2739/q44wvN.png"
+    },
+    "Circle Green": {
+      "url": "https://imagizer.imageshack.com/img922/324/wjscan.png"
+    },
+    "Triangle pink": {
+      "url": "https://imagizer.imageshack.com/img923/791/NoVanQ.png"
+    }
+  }
+}

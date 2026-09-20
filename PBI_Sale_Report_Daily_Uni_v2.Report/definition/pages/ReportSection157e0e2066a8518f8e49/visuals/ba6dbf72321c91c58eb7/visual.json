@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "ba6dbf72321c91c58eb7",
+  "position": {
+    "x": 163,
+    "y": 170,
+    "z": 4000,
+    "height": 535.61935590884286,
+    "width": 867,
+    "tabOrder": 1000
+  },
+  "visualGroup": {
+    "displayName": "Sales Table",
+    "groupMode": "ScaleMode"
+  }
+}

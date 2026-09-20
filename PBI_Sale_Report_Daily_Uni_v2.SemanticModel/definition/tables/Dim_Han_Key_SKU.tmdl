@@ -1,0 +1,46 @@
+table Dim_Han_Key_SKU
+	lineageTag: efe32192-6af1-4bd5-b978-1afeb1ffb812
+
+	column 'Mã hàng'
+		dataType: int64
+		formatString: 0
+		lineageTag: c0adf3dd-5b5f-4985-9595-db47548b19d3
+		summarizeBy: none
+		sourceColumn: Mã hàng
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tên hàng'
+		dataType: string
+		lineageTag: 62144e94-3ef6-47e1-82fe-cc3df6bb200d
+		summarizeBy: none
+		sourceColumn: Tên hàng
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Thương hiệu'
+		dataType: string
+		lineageTag: 1c1feef1-1ed2-4feb-9b8d-4db33811ca39
+		summarizeBy: none
+		sourceColumn: Thương hiệu
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Han_Key_SKU = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Name] = "PM_Han_Key_SKU_6M_20240412.xlsx")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (10)", each #"Transform File (10)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (10)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (10)", Table.ColumnNames(#"Transform File (10)"(#"Sample File (10)"))),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"Mã hàng", Int64.Type}, {"Tên hàng", type text}, {"Thương hiệu", type text}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type1",{"Mã hàng", "Tên hàng", "Thương hiệu"})
+				in
+				    #"Removed Other Columns"
+
+	annotation PBI_ResultType = Table
+

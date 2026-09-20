@@ -1,0 +1,30 @@
+table Dim_Master_Channel
+	lineageTag: 916dee81-4d21-4299-ace0-2cb2aba53873
+
+	column Master_Channel
+		dataType: string
+		lineageTag: ae21c879-417b-4ec2-951f-ecc13620f679
+		summarizeBy: none
+		sourceColumn: Master_Channel
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Master_Channel = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/TGSF_Dim_Product/" or [Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Lookup Table/Unicorn_Dim_Product/") and ([Name] = "Dim_Warehouse.xlsx")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (9)", each #"Transform File (9)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Transform File (9)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (9)", Table.ColumnNames(#"Transform File (9)"(#"Sample File (9)"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Kho", type text}, {"Master_Channel", type text}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"Master_Channel"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns")
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_ResultType = Table
+

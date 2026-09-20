@@ -1,0 +1,1619 @@
+table Fact_Product_Sale
+	lineageTag: 32cbc477-413c-4786-a2ca-ecd882dc6e1b
+
+	measure 'Total Qty' = SUM(Fact_Product_Sale[Quantity])
+		displayFolder: _Measure Qty
+		lineageTag: 0ceba804-ebca-4e61-8c55-83d239438e07
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Total Sales' = SUM(Fact_Product_Sale[Sales])
+		displayFolder: _Measure Sales
+		lineageTag: 86e5b2d7-ff11-4d98-bbcf-40179bf317b8
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Total Order' =
+			CALCULATE(DISTINCTCOUNT(Fact_Product_Sale[Order ID])
+			                        ,FILTER((Dim_HoaDon),
+			                                    AND(NOT(Dim_HoaDon[Trạng thái]="Đã trả")
+			                                        ,NOT( Dim_HoaDon[Trạng thái giao hàng]="Đã chuyển hoàn"
+			                                                ))))
+			//Không tính số lượng đơn theo trạng thái "Đã trả", trạng thái giao hàng "Đã chuyển hoàn"
+		displayFolder: _Measure Order
+		lineageTag: f82de353-7bce-4b4b-901b-cd2377eed6bb
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure AOV = DIVIDE([Total Sales],[Total Order])
+		displayFolder: _Measure AOV
+		lineageTag: 64ccba8a-f4d9-43e1-8e2d-adcd1c3d55e9
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Sales YTD' = TOTALYTD(Fact_Product_Sale[Total Sales],Dim_Date[Date])
+		formatString: #,0
+		displayFolder: _Measure Sales
+		lineageTag: ea6deae8-de43-4b35-b9af-a4a8bc50b4c8
+
+	measure 'Sales YTD LY' = TOTALYTD(Fact_Product_Sale[Total Sales],SAMEPERIODLASTYEAR(Dim_Date[Date]))
+		formatString: #,0
+		displayFolder: _Measure Sales
+		lineageTag: f97d0804-6c60-47fc-8f73-150338dc97c1
+
+	measure 'Total Sales LY' = ```
+			
+			CALCULATE(
+			    [Total Sales],
+			    SAMEPERIODLASTYEAR(Dim_Date[Date])
+			   
+			    )
+			```
+		displayFolder: _Measure Sales
+		lineageTag: 4e8a6cc0-6774-4b12-ab95-a76c40438c72
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0 K",
+				        _CurrentValue <= 1E5, "#,0,.0 K",
+				        _CurrentValue <= 1E6, "#,0,. K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0 M",
+				        _CurrentValue <= 1E8, "#,0,,.0 M",
+				        _CurrentValue <= 1E9, "#,0,,. M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0 B",
+				        _CurrentValue <= 1E11, "#,0,,,.0 B",
+				        _CurrentValue <= 1E12, "#,0,,,. B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Total Sales Previous Year' =
+			
+			//Doanh thu lũy kế (tổng) của năm trước
+			CALCULATE([Total Sales],PREVIOUSYEAR(Dim_Date[Date]))
+		formatString: 0
+		displayFolder: _Measure Sales
+		lineageTag: c0ba78c0-6f1c-4cd0-9561-3d18b680a84a
+
+	measure 'Top Product' = RANKX(ALL(Fact_Product_Sale),[Total Sales])
+		formatString: 0
+		lineageTag: d0882201-f129-4df9-8633-d186153b7c24
+
+	measure 'Sales 2024' = CALCULATE(SUM(Fact_Product_Sale[Sales]),Dim_Date[Year]= 2024)
+		formatString: 0
+		displayFolder: _Measure Sales
+		lineageTag: db89519b-72cf-464d-b861-f81dfcd2fa09
+
+	measure 'Sales LY% Adj' = DIVIDE(([Total Sales]-[Total Sales LY Adj]),[Total Sales LY Adj])
+		formatString: #,0.0%;-#,0.0%;#,0.0%
+		displayFolder: _Measure Sales
+		lineageTag: 459af192-6237-46be-beec-7ba63718786b
+
+	measure 'Diff. Between TY & LY' = IF(ISBLANK([Total Sales]),BLANK(), [Total Sales]-[Total Sales LY])
+		formatString: 0
+		displayFolder: _Measure Sales
+		lineageTag: 920a9dd4-7f3f-472f-ab92-a8342f0570b4
+
+	measure 'Total Qty LY Adj' =
+			//điều chỉnh so với cột total qty LY, chỉ hiển thị so với thời gian hiện tại, thêm biến Ispast là TRUE
+			CALCULATE(
+			    [Total Qty]
+			    ,SAMEPERIODLASTYEAR(Dim_Date[Date])
+			    ,Dim_Date[IsPast] = TRUE()
+			    )
+		displayFolder: _Measure Qty
+		lineageTag: 90e7f264-4621-4c8a-9c36-98df486c2746
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Qty LY% Adj' = DIVIDE([Total Qty]-[Total Qty LY Adj],[Total Qty LY Adj])
+		formatString: #,0.0%;-#,0.0%;#,0.0%
+		displayFolder: _Measure Qty
+		lineageTag: 8e8225a0-7ae4-4ce0-b857-3ef0118a0166
+
+	measure 'Sales PM' =
+			CALCULATE([Total Sales],DATEADD(Dim_Date[Date],-1,month))
+			//Doanh thu của tháng trước đó
+		displayFolder: _Measure Sales
+		lineageTag: ebd6b78d-4320-4c2c-9816-eb6fe707f21e
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Sales PW' =
+			CALCULATE([Total Sales],DATEADD(Dim_Date[Date],-7,DAY),ALL(Dim_Date[Date]))
+			//tính số của tuần trước đó
+			//Sử dụng DATEADD -7 để lùi về 7 ngày trước đó, lồng thêm hàm ALL để áp dụng cho tất cả các ngày.
+		displayFolder: _Measure Sales
+		lineageTag: fba1b694-4d02-4a7f-8623-a51e3c1d1b7f
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Sales WoW%' =
+			
+			//% Sale so với tuần trước
+			DIVIDE([Total Sales]-Fact_Product_Sale[Sales PW],[Sales PW])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: _Measure Sales
+		lineageTag: f35bc12d-a997-4b26-adfb-fac5835629fa
+
+	measure 'Sales MoM%' = DIVIDE([Total Sales]-Fact_Product_Sale[Sales PM],[Sales PM])
+		formatString: #,0.0%;-#,0.0%;#,0.0%
+		displayFolder: _Measure Sales
+		lineageTag: 17e229ea-729b-437d-b0f7-52c208979cd0
+
+	measure 'Total Order LY' = CALCULATE([Total Order],SAMEPERIODLASTYEAR(Dim_Date[Date]))
+		displayFolder: _Measure Order
+		lineageTag: d5a36060-6b46-468d-8e4c-05911eb654ba
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'AOV LY' = ```
+			CALCULATE([AOV],SAMEPERIODLASTYEAR(Dim_Date[Date]))
+			
+			```
+		displayFolder: _Measure AOV
+		lineageTag: 1c6216eb-d34a-40e7-8909-884f7cc8a3f6
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Qty PM' = CALCULATE([Total Qty],DATEADD(Dim_Date[Date],-1,MONTH))
+		displayFolder: _Measure Qty
+		lineageTag: 62a18198-ae3a-46d6-99f6-94ee9e419f6e
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Qty MoM%' = DIVIDE([Total Qty]-[Qty PM],[Qty PM])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: _Measure Qty
+		lineageTag: 9e79147b-a267-4dfd-a31b-b28622e7e175
+
+	measure 'Qty PW' =
+			CALCULATE([Total Qty],DATEADD(Dim_Date[Date],-7,DAY),ALL(Dim_Date[Date]))
+			//Doanh thu của tuần trước đó
+			//Sử dụng DATEADD -7 để lùi về 7 ngày trước đó, lồng thêm hàm ALL để áp dụng cho tất cả các ngày.
+		displayFolder: _Measure Qty
+		lineageTag: 3df6f73a-4285-4efc-8134-305a753e623b
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Qty WoW%' = DIVIDE([Total Qty]-[Qty PW],[Qty PW])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: _Measure Qty
+		lineageTag: 0e7c1799-3e9e-45c9-b7ac-f9744ae16a58
+
+	measure 'Order PM' = ```
+			//CALCULATE(
+			           //         DISTINCTCOUNT(Fact_Product_Sale[Order ID])
+			           //         ,PREVIOUSMONTH(Dim_Date[Date]))
+			           CALCULATE([Total Order],DATEADD(Dim_Date[Date],-1,month))
+			                   
+			
+			```
+		displayFolder: _Measure Order
+		lineageTag: aea24d9a-8a1a-4234-9a66-82a560443526
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'AOV PM' =
+			CALCULATE(
+			                    [AOV]
+			                    ,PREVIOUSMONTH(Dim_Date[Date])
+			)
+		displayFolder: _Measure AOV
+		lineageTag: 8a286ab8-5380-464c-badc-b7b2cdc22a3a
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Order PW' =
+			
+			CALCULATE(
+			    [Total Order]
+			    ,DATEADD(Dim_Date[Date],-7,DAY),
+			    ALL(Dim_Date[Date])
+			    )
+			//tính số của tuần trước đó
+			//Sử dụng DATEADD -7 để lùi về 7 ngày trước đó, lồng thêm hàm ALL để áp dụng cho tất cả các ngày.
+		displayFolder: _Measure Order
+		lineageTag: 083f1ec7-cbdc-47bf-94ee-ae248cfc9a86
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'AOV PW' =
+			
+			CALCULATE(
+			    [AOV]
+			    ,DATEADD(Dim_Date[Date],-7,DAY)
+			    ,ALL(Dim_Date[Date])
+			)
+			//tính số của tuần trước đó
+			//Sử dụng DATEADD -7 để lùi về 7 ngày trước đó, lồng thêm hàm ALL để áp dụng cho tất cả các ngày.
+		displayFolder: _Measure AOV
+		lineageTag: a1bf3b33-d8ed-4545-bcc4-1dc1b2ac630c
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'items count' =
+			CALCULATE(COUNTROWS(Fact_Product_Sale))
+			//Tính số sản phẩm bán được trong mỗi đơn hàng
+		formatString: #,0
+		lineageTag: c561d164-911f-4185-ac43-1930be466bed
+
+	measure Recentdate = DATEADD(LASTDATE(Dim_Date[Date]),-90,day)
+		formatString: General Date
+		displayFolder: _text DAX RFM
+		lineageTag: 5acb5c2b-09ab-4ded-bfcc-f1875303233f
+
+	measure 'Active day recent 90day' =
+			
+			Var recendate = DATEADD(LASTDATE(Dim_Date[Date]),-90,DAY)
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(Fact_Product_Sale[Order Date]),FILTER(Dim_Date,Dim_Date[Date]>=recendate))
+		formatString: 0
+		displayFolder: _text DAX RFM
+		lineageTag: d127def9-2dc4-48fa-844d-3e37e91de0b9
+
+	measure 'aov price' =
+			DIVIDE([Total Sales],[Total Qty])
+			//Tính giá bán mỗi thời điểm
+		displayFolder: _Measure AOV
+		lineageTag: f10c5ede-5b05-4f4d-8086-41db57144052
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Đơn trả' =
+			CALCULATE(
+			                    DISTINCTCOUNT(Fact_Product_Sale[Order ID])
+			                    ,FILTER(Dim_HoaDon,Dim_HoaDon[Trạng thái]="Đã trả")
+			)
+		formatString: 0
+		displayFolder: _Measure Order
+		lineageTag: 28939787-5a95-4b69-9ca3-bcd5ecb16534
+
+	measure 'Total Sales Last 90 days' =
+			
+			CALCULATE([Total Sales]
+			            ,DATESBETWEEN(Dim_Date[Date],
+			                            MAX(Dim_Date[Date])-90,MAX(Dim_Date[Date])
+			            ))
+		formatString: #,0
+		displayFolder: _Measure Sales
+		lineageTag: 969f6494-9874-49b9-aabb-52361c506f1a
+
+	measure 'Total Qty 90 days' =
+			
+			CALCULATE([Total Qty]
+			            ,DATESBETWEEN(Dim_Date[Date]
+			                        ,MAX(Dim_Date[Date])-90,MAX(Dim_Date[Date])
+			            ))
+		displayFolder: _Measure Qty
+		lineageTag: 4dc61a71-bd2a-408d-83e2-d0e3ff1ae368
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0 K",
+				        _CurrentValue <= 1E5, "#,0,.0 K",
+				        _CurrentValue <= 1E6, "#,0,. K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0 M",
+				        _CurrentValue <= 1E8, "#,0,,.0 M",
+				        _CurrentValue <= 1E9, "#,0,,. M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0 B",
+				        _CurrentValue <= 1E11, "#,0,,,.0 B",
+				        _CurrentValue <= 1E12, "#,0,,,. B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Total Product' =
+			
+			//Số sản phẩm/mã hàng bán mỗi tháng
+			DISTINCTCOUNT(Fact_Product_Sale[Item Code])
+		formatString: #,0
+		lineageTag: 35947689-55db-412e-b0f8-672ec208d01e
+
+	measure 'Numbers product of Order' =
+			
+			COUNTROWS(DISTINCT(Fact_Product_Sale[Item Code]))
+			//tính số sản phẩm có trong mỗi đơn hàng
+		formatString: 0
+		lineageTag: deaafa1e-e23e-44d0-8080-e0a6760faf87
+
+	measure 'Total Product LY Adj' =
+			
+			CALCULATE([Total Product]
+			,SAMEPERIODLASTYEAR(Dim_Date[Date])
+			,Dim_Date[IsPast] = TRUE()
+			)
+		formatString: #,0
+		lineageTag: ce91316f-4f17-4a8c-9d64-427b24b4759d
+
+	measure 'Sales % by Region' =
+			// Tính tỷ lệ % sale mỗi tỉnh thành
+			Var totalsale = SUM(Fact_Product_Sale[Sales])
+			Var totalsaleRegion = CALCULATE(SUM(Fact_Product_Sale[Sales]),ALL(Dim_Location))
+			Var result = DIVIDE(totalsale,totalsaleRegion)
+			RETURN
+			result
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: _Measure Sales
+		lineageTag: 8a15faa8-f12b-4ab8-80d6-51d226d6681d
+
+	measure 'Median Sale' = MEDIAN(Fact_Product_Sale[Sales])
+		displayFolder: _Measure Sales
+		lineageTag: 168fb5af-375e-4cf3-a07a-44238d53d444
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Sale' = AVERAGE(Fact_Product_Sale[Sales])
+		displayFolder: _Measure Sales
+		lineageTag: d0fec8f5-e519-424c-bab3-bf2120dd02ca
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Sales Change PM' = [Total Sales]- [Sales PM]
+		formatString: #,0
+		displayFolder: _Measure Sales
+		lineageTag: 669589fa-158f-4bdf-a521-a566586ad34f
+
+	measure #Order = SUMX(SUMMARIZE(Fact_Product_Sale,Fact_Product_Sale[Order ID]),1)
+		formatString: #,0
+		displayFolder: Basket Analysis Sqlbi
+		lineageTag: fe7e2346-c0a3-4446-9b91-34143ebc51a0
+
+	measure '#Order Total' =
+			
+			CALCULATE(
+			    [#Order],
+			    REMOVEFILTERS(Dim_Product)
+			)
+		formatString: #,0
+		displayFolder: Basket Analysis Sqlbi
+		lineageTag: a563758f-5b70-4988-8ed0-90f2a371e88d
+
+	measure '#Multi Sales' = IF([items count] = 1, "Single", "Multiple")
+		displayFolder: _text DAX RFM
+		lineageTag: 5f16c519-8b37-4e33-bd81-d04275e20df0
+
+	measure 'Sales % by Category' =
+			// Tính tỷ lệ % sale mỗi ngành hàng
+			Var totalsale = SUM(Fact_Product_Sale[Sales])
+			Var totalsaleCategory = CALCULATE(SUM(Fact_Product_Sale[Sales]),ALL(Dim_Category))
+			Var result = DIVIDE(totalsale,totalsaleCategory)
+			RETURN
+			result
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: _Measure Sales
+		lineageTag: 2325766f-9322-4002-b19b-da6b30b0f3c1
+
+	measure 'Sales % by channel' =
+			// Tính tỷ lệ % sale mỗi kênh
+			Var totalsale = SUM(Fact_Product_Sale[Sales])
+			Var totalsaleChannel = CALCULATE(SUM(Fact_Product_Sale[Sales]),ALL(Dim_Channel))
+			Var result = DIVIDE(totalsale,totalsaleChannel)
+			RETURN
+			result
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: _Measure Sales
+		lineageTag: 5091bb25-3e7a-40c5-881b-01ba070061b9
+
+	measure 'AOV % LY ADJ' =
+			
+			DIVIDE([AOV]-[AOV LY Adj],[AOV LY Adj])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: _Measure AOV
+		lineageTag: 379fd483-b3cd-4362-be0a-63b77ca5c454
+
+	measure 'Color AOV % LY' = ```
+			
+			    IF([AOV % LY ADJ]<0,"#D64554")
+			```
+		displayFolder: _Measure Sales
+		lineageTag: e8699030-a6f5-4dcd-af93-543bec72a120
+
+	measure '#Conditional AOV% LY' =
+			
+			IF([AOV % LY ADJ]<0, 0,1)
+		formatString: 0
+		displayFolder: _Measure Format
+		lineageTag: 1aa72d2d-56f8-45d7-b7c8-46800de20c0d
+
+	measure Blank = BLANK()
+		formatString: 0
+		lineageTag: 2e13956b-7d0b-4697-9680-a322a0a3a111
+
+	measure 'Total Sales LY Adj' =
+			//điều chỉnh so với cột total sale LY, chỉ hiển thị so với thời gian hiện tại của cùng kỳ, thêm biến Ispast là TRUE
+			CALCULATE(
+			    [Total Sales],
+			    SAMEPERIODLASTYEAR(Dim_Date[Date]),
+			    Dim_Date[IsPast] =TRUE()
+			    )
+		displayFolder: _Measure Sales
+		lineageTag: 11e4db19-0a92-4025-a91e-90565c10e665
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Total Qty LY' = ```
+			
+			CALCULATE(
+			    [Total Qty]
+			    ,SAMEPERIODLASTYEAR(Dim_Date[Date])
+			    
+			    )
+			```
+		displayFolder: _Measure Qty
+		lineageTag: 3ccf868f-040b-44ad-9b2e-f650ce2029a8
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Total Order LY Adj' =
+			//điều chỉnh so với cột total order LY, chỉ hiển thị so với thời gian hiện tại, thêm biến Ispast là TRUE
+			CALCULATE(
+			    [Total Order]
+			    ,SAMEPERIODLASTYEAR(Dim_Date[Date])
+			    ,Dim_Date[IsPast] = TRUE()
+			    )
+		displayFolder: _Measure Order
+		lineageTag: b55c3ea3-3bfc-474c-b09e-48af8c9d8855
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'AOV LY Adj' =
+			//điều chỉnh so với cột AOV LY, chỉ hiển thị so với thời gian hiện tại, thêm biến Ispast là TRUE
+			CALCULATE(
+			    [AOV]
+			    ,SAMEPERIODLASTYEAR(Dim_Date[Date])
+			    ,Dim_Date[IsPast] = TRUE()
+			    )
+		displayFolder: _Measure AOV
+		lineageTag: e4bf0628-47da-4344-b851-6bd4694c0b99
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Sales LY%' = DIVIDE(([Total Sales]-[Total Sales LY]),[Total Sales LY])
+		formatString: #,0%;-#,0%;#,0%
+		displayFolder: _Measure Sales
+		lineageTag: 28542c5f-3a5f-4594-b597-8915c71637f0
+
+	measure 'Qty LY%' = DIVIDE([Total Qty]-[Total Qty LY],[Total Qty LY])
+		displayFolder: _Measure Qty
+		lineageTag: 4fca81f3-e24b-4e49-9fb0-ec2220eeba48
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Sales YoY Adj' =
+			// Tính số tiền chênh lệch của hiện tại so với cùng kỳ
+			[Total Sales]-[Total Sales LY Adj]
+		lineageTag: d3b63316-a495-42e2-9257-903c6cd5b49e
+
+		formatStringDefinition = ```
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0 K",
+				        _CurrentValue <= 1E5, "#,0,.0 K",
+				        _CurrentValue <= 1E6, "#,0,. K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0 M",
+				        _CurrentValue <= 1E8, "#,0,,.0 M",
+				        _CurrentValue <= 1E9, "#,0,,. M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0 B",
+				        _CurrentValue <= 1E11, "#,0,,,.0 B",
+				        _CurrentValue <= 1E12, "#,0,,,. B",
+				
+				        -- 1M negative
+				        _CurrentValue <= (-1E7), "-#,0,,.0 M",
+				        _CurrentValue <= (-1E8), "-#,0,,.0 M",
+				        _CurrentValue <= (-1E9), "-#,0,,. M",
+				
+				        --10k 100k negative
+				        _CurrentValue <= (-1E4), "-#,0,.0 K",
+				        _CurrentValue <= (-1E5), "-#,0,.0 K",
+				        _CurrentValue <= (-1E6), "-#,0,. K"
+				
+				    )
+				
+				
+				VAR _FormatString =
+				    _NumberFormat & """" 
+				RETURN
+				    _FormatString
+				```
+
+	measure 'AOV % PM' = DIVIDE([AOV]-[AOV PM],[AOV PM])
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: _Measure AOV
+		lineageTag: 56dfb2a3-7d8a-4122-acce-6fdbdc3a4f1e
+
+	measure '#Format Total Sales' = [Total Sales]
+		displayFolder: _Measure Format
+		lineageTag: cca84fb0-0b49-4a5e-a813-aaf55c5b885a
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.00 K",
+				        _CurrentValue <= 1E5, "#,0,.0 K",
+				        _CurrentValue <= 1E6, "#,0,. K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.00 M",
+				        _CurrentValue <= 1E8, "#,0,,.0 M",
+				        _CurrentValue <= 1E9, "#,0,,. M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.00 B",
+				        _CurrentValue <= 1E11, "#,0,,,.0 B",
+				        _CurrentValue <= 1E12, "#,0,,,. B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Monthly Revenue Key SKU' =
+			
+			TOTALMTD(
+			    [Total Sales],Key_SKU_Online_VY[Month])
+		formatString: #,0
+		lineageTag: 0393d9a1-13b1-493e-a5f6-4840b45c6fe4
+
+	measure 'Total Sales SKU Key' =
+			
+			CALCULATE(
+			    SUM(Fact_Product_Sale[Sales]),
+			    KEEPFILTERS(Key_SKU_Online_VY))
+		displayFolder: _Measure Sales
+		lineageTag: 90dfb88c-6eb0-4b47-a1a1-ef2243f5d494
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Sales % SKU key' =
+			// tỷ lệ doanh thu của Key SKU so với total sales
+			CALCULATE(
+			    DIVIDE([Total Sales SKU key],[Total Sales]),
+			    KEEPFILTERS(dim_channel))
+		formatString: #,0.0%;-#,0.0%;#,0.0%
+		displayFolder: _Measure Sales
+		lineageTag: c6695667-2fee-4a6b-9b3c-95af2fca4ca2
+
+	measure 'Total Sales Store Other' =
+			//Tính doanh thu của các store không có khắc tên
+			CALCULATE(
+			    [Total Sales],
+			    FILTER(Dim_Channel,Dim_Channel[Sub Channel] in {"159NVC","366VVN","278VTS","100HHT","213BNKKN","VINCOM","15PVT"}
+			    ))
+		formatString: 0
+		displayFolder: _Measure Sales
+		lineageTag: 613a4f7c-1e47-4cdc-87b8-d093222b6fbd
+
+	measure '#Format BG Transparent' = "rgba(255,255,255,0)"
+		displayFolder: _Measure Format
+		lineageTag: 178d18dc-8feb-43a8-9f7e-2cd4b725862c
+
+	measure 'LastDate update daily' = ```
+			
+			    CALCULATE(    
+			        LASTDATE(Fact_Product_Sale[Order Date]),
+			        ALL(Dim_Date)
+			    )
+			```
+		formatString: Short Date
+		lineageTag: 3280c442-dd4b-4083-b376-dcc0e5511d46
+
+	measure 'Order Gift' =
+			// Tính đơn hàng trên 499k, có tặng quà
+			CALCULATE(
+			    [Total Order],
+			    FILTER(Sales_Summarize_table,Sales_Summarize_table[Sales Amount]>499000)
+			)
+		displayFolder: _Measure Gift 499k
+		lineageTag: 35ebc36d-1569-4246-a658-0d3086405a18
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure '_Order % by Price Range' = ```
+			//Tính tỷ lệ % đơn hàng theo mỗi khoảng giá
+			Var TotalOrder = DISTINCTCOUNT(Fact_Product_Sale[Order ID])
+			
+			Var TotalOrder_Price_Range = CALCULATE(DISTINCTCOUNT(Fact_Product_Sale[Order ID]),ALL(Dim_Price_Range))
+			
+			Var Result = DIVIDE(TotalOrder,TotalOrder_Price_Range)
+			RETURN
+			Result
+			
+			```
+		formatString: 0
+		displayFolder: _Measure Gift 499k
+		lineageTag: 9f045910-7718-4c86-b6d9-2c471db27591
+
+	measure 'Order < 500k' =
+			//Tính số đơn hàng dưới 500k
+			    CALCULATE(
+			        [Total Order],
+			        FILTER(Sales_Summarize_table,Sales_Summarize_table[Sales Amount]<500000 )
+			)
+		displayFolder: _Measure Gift 499k
+		lineageTag: 66c39f24-f3ee-4f47-8bb0-9855f7eac2b8
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Sales of Ord > 499k' = ```
+			
+			    CALCULATE(
+			        [Total Sales],
+			        FILTER(Sales_Summarize_table,Sales_Summarize_table[Sales Amount]>499000))
+			```
+		displayFolder: _Measure Gift 499k
+		lineageTag: 3291e3c0-8338-4dd6-954e-72bc40cda4b4
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Order > 499k' = ```
+			
+			    CALCULATE(
+			        [Total Order],
+			        FILTER(Sales_Summarize_table,Sales_Summarize_table[Sales Amount]>499000))
+			```
+		displayFolder: _Measure Gift 499k
+		lineageTag: 81a549f7-0c25-4356-b61e-5ddc22d728e3
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Qty Product Gift of Ord > 499k' = ```
+			//Tính số lượng sản phẩm tặng cho hóa đơn trên 500k
+			    CALCULATE([Total Qty],
+			    FILTER(Fact_Product_Sale,Fact_Product_Sale[Item Code] in {"SP8708874540","SP8708878311","SP8708881321"})
+			    )
+			
+			                
+			```
+		displayFolder: _Measure Gift 499k
+		lineageTag: a9fb766a-d244-46d6-a01c-6ff676fd4441
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure '% Order Gift' =
+			// Tỷ lệ % của đơn có tặng quà so với tổng số đơn
+			 1- DIVIDE([Order < 500k],[Order Offline])
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: _Measure Gift 499k
+		lineageTag: 226cda29-3893-404f-bdee-25d94b26006d
+
+	measure 'Order Offline' =
+			
+			CALCULATE([Total Order],
+			FILTER(Dim_Master_Channel,Dim_Master_Channel[Master_Channel]="Offline")
+			)
+		displayFolder: _Measure Gift 499k
+		lineageTag: e4677ad2-5508-43be-942c-91b7194eface
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure '_Format Order Gift' =
+			//chọn màu cho đơn dưới và trên 499k
+			SWITCH(
+			    TRUE()
+			    ,[Total Sales]>50000 ,"#B3B3B3")
+		displayFolder: _Measure Gift 499k
+		lineageTag: 3d54a8bb-478a-4ede-8b66-4ee2b0144a43
+
+	measure 'Sales of Ord < 500k' = ```
+			
+			    CALCULATE(
+			        [Total Sales],
+			        FILTER(Sales_Summarize_table,Sales_Summarize_table[Sales Amount]<500000))
+			```
+		displayFolder: _Measure Gift 499k
+		lineageTag: 3d5de7d7-aece-48ca-965e-421e430a492b
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Qty of Ord > 499k' = ```
+			
+			    CALCULATE(
+			        [Total Qty],
+			        FILTER(Sales_Summarize_table,Sales_Summarize_table[Sales Amount]>499000
+			        )
+			    )
+			```
+		displayFolder: _Measure Gift 499k
+		lineageTag: e328a523-0ba2-4fbd-8f13-ccb93b7684c6
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Qty of Ord < 500k' = ```
+			
+			    CALCULATE(
+			        [Total Qty],
+			        FILTER(Sales_Summarize_table,Sales_Summarize_table[Sales Amount] < 500000
+			        )
+			    )
+			```
+		displayFolder: _Measure Gift 499k
+		lineageTag: 961405f2-89c5-4f85-9114-177747708de0
+
+		formatStringDefinition =
+				VAR _CurrentValue =
+				    SELECTEDMEASURE()
+				VAR _NumberFormat =
+				    SWITCH (
+				        TRUE (),
+				        _CurrentValue <= 1E3, "#,0.",
+				        --10k 100k
+				        _CurrentValue <= 1E4, "#,0,.0K",
+				        _CurrentValue <= 1E5, "#,0,.0K",
+				        _CurrentValue <= 1E6, "#,0,.K",
+				
+				        -- 1M
+				        _CurrentValue <= 1E7, "#,0,,.0M",
+				        _CurrentValue <= 1E8, "#,0,,.0M",
+				        _CurrentValue <= 1E9, "#,0,,.M",
+				
+				        --1B
+				        _CurrentValue <= 1E10, "#,0,,,.0B",
+				        _CurrentValue <= 1E11, "#,0,,,.0B",
+				        _CurrentValue <= 1E12, "#,0,,,.B"
+				    )
+				VAR _FormatString =
+				    _NumberFormat & """" & " Views" & """"
+				RETURN
+				    _NumberFormat
+
+	measure 'Sell Out (total Qty)' =
+			// viết thêm measure Sell out để dùng cho file data sharing, định dạng theo dấu phẩy, không dùng định dạng dynamic)
+			CALCULATE([Total Qty])
+		formatString: #,0
+		displayFolder: _Measure Qty
+		lineageTag: 110343ac-6062-405d-a7ee-d7c321f2f295
+
+	measure 'Sales % by Item' =
+			// Tính tỷ lệ % sale mỗi Item/product theo Item Name
+			Var totalsale = SUM(Fact_Product_Sale[Sales])
+			Var totalsaleItem = CALCULATE(SUM(Fact_Product_Sale[Sales]),ALL(Dim_Product[Item Name]))
+			Var result = DIVIDE(totalsale,totalsaleItem)
+			RETURN
+			result
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: _Measure Sales
+		lineageTag: cbfc125d-1251-4485-a0b4-f3cfcc9d8140
+
+	measure 'Order LY % Adj' =
+			
+			DIVIDE([Total Order]-[Total Order LY Adj],[Total Order LY Adj])
+		formatString: 0%;-0%;0%
+		displayFolder: _Measure Order
+		lineageTag: 12812753-ec2b-4247-a1ea-b317f3186a92
+
+	measure 'Order MoM%' = DIVIDE([Total Order]-Fact_Product_Sale[Order PM],[Order PM])
+		formatString: 0%;-0%;0%
+		displayFolder: _Measure Order
+		lineageTag: 279847c7-468e-4b39-9a32-68bb1bd30335
+
+	measure 'Order WoW%' =
+			
+			//% Sale so với tuần trước
+			DIVIDE([Total Order]-Fact_Product_Sale[Order PW],[Order PW])
+		formatString: 0%;-0%;0%
+		displayFolder: _Measure Order
+		lineageTag: af2bfccb-dcf9-45f6-a5a4-6c8afaa8d8a3
+
+	column 'Item Code'
+		dataType: string
+		displayFolder: _Columns
+		lineageTag: 798d4ade-1d20-42e0-bc57-fef9d9cd2857
+		summarizeBy: none
+		sourceColumn: Item Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order ID'
+		dataType: string
+		displayFolder: _Columns
+		lineageTag: 1f67daaf-7b86-4e28-9ead-fc8a6185a777
+		summarizeBy: none
+		sourceColumn: Order ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Chi nhánh'
+		dataType: string
+		displayFolder: _Columns
+		lineageTag: 7fd56d8e-3984-4186-a753-1e42ae83b8a5
+		summarizeBy: none
+		sourceColumn: Chi nhánh
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order Date'
+		dataType: dateTime
+		formatString: dd-mmm-yy
+		displayFolder: _Columns
+		lineageTag: 4d9c8b3d-d630-4989-b301-a76a55d979ac
+		summarizeBy: none
+		sourceColumn: Order Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column Sales
+		dataType: int64
+		formatString: #,0
+		displayFolder: _Columns
+		lineageTag: cda394cb-4d48-42ac-bb24-680c60682d4e
+		summarizeBy: none
+		sourceColumn: Sales
+
+		annotation SummarizationSetBy = User
+
+	column Quantity
+		dataType: int64
+		formatString: #,0
+		displayFolder: _Columns
+		lineageTag: 7a6bbb6a-ca56-4e3e-8490-759a78f4bef1
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_Product_Sale = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows1" = Table.SelectRows(Source, each ([Folder Path] = "https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/Documents/Phòng PM/PM's Data/TGSF_Data/Unicorn_Data_KiotViet/Unicorn_Data_KiotViet_Order/")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows1", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File", each #"Transform File"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File"}),
+				    #"Expanded Transform File" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File", {"Nhóm hàng", "Mã hàng", "Mã vạch", "Tên hàng", "Thương hiệu", "SL Bán", "Giá trị niêm yết", "Doanh thu", "Chênh lệch", "SL trả", "Giá trị trả", "Doanh thu thuần", "Mã hóa đơn", "Chi nhánh", "Thời gian", "Nhân viên", "Khách hàng", "SL", "Giá trị niêm yết chi tiết", "Doanh thu chi tiết", "Chênh lệch chi tiết"}, {"Nhóm hàng", "Mã hàng", "Mã vạch", "Tên hàng", "Thương hiệu", "SL Bán", "Giá trị niêm yết", "Doanh thu", "Chênh lệch", "SL trả", "Giá trị trả", "Doanh thu thuần", "Mã hóa đơn", "Chi nhánh", "Thời gian", "Nhân viên", "Khách hàng", "SL", "Giá trị niêm yết chi tiết", "Doanh thu chi tiết", "Chênh lệch chi tiết"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Transform File",{{"Source.Name", type text}, {"Nhóm hàng", type text}, {"Mã hàng", type text}, {"Mã vạch", type any}, {"Tên hàng", type text}, {"Thương hiệu", type text}, {"SL Bán", Int64.Type}, {"Giá trị niêm yết", Int64.Type}, {"Doanh thu", Int64.Type}, {"Chênh lệch", Int64.Type}, {"SL trả", Int64.Type}, {"Giá trị trả", Int64.Type}, {"Doanh thu thuần", Int64.Type}, {"Mã hóa đơn", type text}, {"Chi nhánh", type text}, {"Thời gian", type datetime}, {"Nhân viên", type text}, {"Khách hàng", type text}, {"SL", Int64.Type}, {"Giá trị niêm yết chi tiết", Int64.Type}, {"Doanh thu chi tiết", Int64.Type}, {"Chênh lệch chi tiết", Int64.Type}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"Mã hàng", "Mã hóa đơn", "Chi nhánh", "Thời gian", "Doanh thu chi tiết", "SL"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Removed Other Columns",{{"Thời gian", type date}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type1",{{"Mã hàng", "Item Code"}, {"Doanh thu chi tiết", "Sales"}, {"SL", "Quantity"}, {"Mã hóa đơn", "Order ID"}, {"Thời gian", "Order Date"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

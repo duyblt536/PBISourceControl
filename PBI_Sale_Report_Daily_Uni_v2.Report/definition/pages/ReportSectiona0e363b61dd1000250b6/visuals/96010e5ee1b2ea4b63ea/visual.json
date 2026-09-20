@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "96010e5ee1b2ea4b63ea",
+  "position": {
+    "x": 990.44557091516685,
+    "y": 109.79370249728557,
+    "z": 6000,
+    "height": 26.104664108885025,
+    "width": 186.4999826238531,
+    "tabOrder": 3000
+  },
+  "visualGroup": {
+    "displayName": "Bookmark Shape",
+    "groupMode": "ScaleMode"
+  }
+}

@@ -1,0 +1,102 @@
+table Dim_Location
+	lineageTag: c0451c16-2be2-42dc-b881-8ff4029be524
+
+	measure 'Color Area' =
+			// dùng để đổi màu cho chart total Sales by region
+			SWITCH(MAX(Dim_Location[Region]),
+			"Trung Bộ","#F7D169"
+			,"Nam Bộ", "#2F9857"
+			,"Bắc Bộ", "#627EAB")
+		lineageTag: 8ad25d43-0d79-495c-ae66-3a6b6ae9542c
+
+	column Province_eng
+		dataType: string
+		lineageTag: 6cf7d558-57c8-4982-a3c1-466b07be0296
+		summarizeBy: none
+		sourceColumn: Province_eng
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: c3c26867-8546-4f24-81a9-d126771db95d
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column Latitude
+		dataType: double
+		lineageTag: 2f640e38-485b-4135-8e0e-ebf6e0a0716f
+		summarizeBy: sum
+		sourceColumn: Latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Longitude
+		dataType: double
+		lineageTag: 2f259a1f-247c-46fa-8269-ffb3e7990d81
+		summarizeBy: sum
+		sourceColumn: Longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Area
+		dataType: string
+		lineageTag: 165589da-7492-42ed-b206-93232a2ded68
+		summarizeBy: none
+		sourceColumn: Area
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		isHidden
+		lineageTag: 2dead9aa-e828-448d-9069-a59eaf4a0b5f
+		summarizeBy: none
+		sourceColumn: Region
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Province
+		dataType: string
+		lineageTag: de89dd44-e8b8-4b38-bea8-a94aa4386e8d
+		summarizeBy: none
+		sourceColumn: Province
+
+		annotation SummarizationSetBy = Automatic
+
+	column No
+		dataType: int64
+		formatString: 0
+		lineageTag: 17ef0970-2427-4fae-bc28-2985f604746d
+		summarizeBy: sum
+		sourceColumn: No
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Location = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://thegioiskinfood-my.sharepoint.com/personal/tienphan_thegioiskinfood_com/", [ApiVersion = 15]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Name] = "Dim_Location.xlsx")),
+				    #"Filtered Hidden Files1" = Table.SelectRows(#"Filtered Rows", each [Attributes]?[Hidden]? <> true),
+				    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File (12)", each #"Transform File (12)"([Content])),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File (12)"}),
+				    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File (12)", Table.ColumnNames(#"Transform File (12)"(#"Sample File (12)"))),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"No", Int64.Type}, {"Tỉnh thành", type text}, {"Miền", type text}, {"Khu vực", type text}, {"Longitude", type number}, {"Latitude", type number}, {"Quốc gia", type text}, {"Province", type text}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"Province", "Quốc gia", "Latitude", "Longitude", "Khu vực", "Miền", "Tỉnh thành", "No"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"Miền", "Region"}, {"Province", "Province_eng"}, {"Tỉnh thành", "Province"}, {"Quốc gia", "Country"}, {"Khu vực", "Area"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+

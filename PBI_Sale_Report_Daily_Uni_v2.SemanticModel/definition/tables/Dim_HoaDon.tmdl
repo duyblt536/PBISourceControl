@@ -1,0 +1,153 @@
+table Dim_HoaDon
+	lineageTag: 27b75e65-cbe8-45e0-8437-6f8306e602d2
+
+	measure 'Total HoaDon' = DISTINCTCOUNT(Dim_HoaDon[Order ID])
+		formatString: 0
+		lineageTag: 747865cc-d335-4fcf-ac25-f794ca488646
+
+	column 'Order ID'
+		dataType: string
+		lineageTag: 16d40eae-5e88-47f6-b356-b49cb21b35c0
+		summarizeBy: none
+		sourceColumn: Order ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 7445a6d2-5754-4cf8-b91e-6201335d7202
+		summarizeBy: none
+		sourceColumn: Order Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Chi nhánh'
+		dataType: string
+		lineageTag: 14ac6693-8402-4d88-b5e7-3c941a8b96ae
+		summarizeBy: none
+		sourceColumn: Chi nhánh
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Kênh bán'
+		dataType: string
+		isHidden
+		lineageTag: b7dca48b-6849-4c3b-98c9-c6ad4d0f097e
+		summarizeBy: none
+		sourceColumn: Kênh bán
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Kênh =
+			SWITCH(TRUE()
+			,Dim_HoaDon[Kênh bán] IN {"Bán trực tiếp","KHÁCH HÀNG DOANH NGHIỆP"}, Dim_HoaDon[Chi nhánh]
+			,Dim_HoaDon[Kênh bán] IN {"Haravan"}, "Web"
+			,Dim_HoaDon[Kênh bán] IN {"TGSF TIKTOK","tiktok shop"}, "Tiktok"
+			,Dim_HoaDon[Kênh bán] IN {"TGSF SHOPEE HANOI"}, "Shopee HN"
+			,Dim_HoaDon[Kênh bán] IN {"TGSF LAZADA"}, "Lazada"
+			,Dim_HoaDon[Kênh bán] IN {"Thế Giới Skin Food"}, "Shopee HCM"
+			,Dim_HoaDon[Kênh bán] IN {"TGSF TIKI"}, "Tiki"
+			)
+		isHidden
+		lineageTag: e98675a9-987c-42e4-b9ab-11fdd07fe7d2
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Trạng thái giao hàng'
+		dataType: string
+		lineageTag: 35943c69-6bb1-4725-94c4-d2d3e160484a
+		summarizeBy: none
+		sourceColumn: Trạng thái giao hàng
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Trạng thái'
+		dataType: string
+		lineageTag: 7a1a50de-3a65-436d-9e7e-90bd10e26101
+		summarizeBy: none
+		sourceColumn: Trạng thái
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tỉnh = RELATED(Dim_VanDon[Province])
+		isHidden
+		lineageTag: fdd59637-c114-438c-a90f-35759b1b9fcb
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Province 3 char' =
+			SWITCH(TRUE()
+			,Dim_HoaDon[Kênh bán] IN {"Bán trực tiếp","KHÁCH HÀNG DOANH NGHIỆP"}, mid(Dim_HoaDon[Chi nhánh],4,3)
+			)
+		isHidden
+		lineageTag: 80fa057e-8b94-42dd-8f91-8c1ac2e3e265
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Province =
+			
+			SWITCH(TRUE()
+			
+			,Dim_HoaDon[Kênh bán] IN {"Haravan","TGSF TIKTOK","tiktok shop","TGSF SHOPEE HANOI","TGSF LAZADA","Thế Giới Skin Food","TGSF TIKI"}, Dim_HoaDon[Tỉnh]
+			,Dim_HoaDon[Province 3 char] IN {"HCM"}, "Hồ Chí Minh"
+			,Dim_HoaDon[Province 3 char] IN {"TGG"}, "Tiền Giang"
+			,Dim_HoaDon[Province 3 char] IN {"HNO"}, "Hà Nội"
+			,Dim_HoaDon[Province 3 char] IN {"DNA"}, "Đồng Nai"
+			
+			)
+		isHidden
+		lineageTag: 5e58bbe2-440e-4b49-ac84-c3ad64e242fa
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'hóa đơn' = RELATED(Dim_VanDon[Order ID])
+		isHidden
+		lineageTag: 5dde375c-8405-4897-8c38-eb0d382363f9
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order Sales' =
+			
+			SUMX(RELATEDTABLE(Fact_Product_Sale),Fact_Product_Sale[Sales])
+		formatString: 0
+		lineageTag: a3bafc80-67df-40f0-9925-a85cfb6ab6e6
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_HoaDon = m
+		mode: import
+		source =
+				let
+				    Source = Table.Combine({#"0_Append_KiotViet_HoaDon_Data", #"0_Append_Fact_KiotViet_TraHang_Data"}),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Thời gian", type date}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each true),
+				    #"Removed Duplicates" = Table.Distinct(#"Filtered Rows", {"Mã hóa đơn"}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Removed Duplicates","","Giao thành công",Replacer.ReplaceValue,{"Trạng thái giao hàng"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Replaced Value",{{"Thời gian", "Order Date"}, {"Mã hóa đơn", "Order ID"}}),
+				    #"Filtered Rows1" = Table.SelectRows(#"Renamed Columns", each [Order ID] <> null and [Order ID] <> "")
+				in
+				    #"Filtered Rows1"
+
+	annotation PBI_ResultType = Table
+
